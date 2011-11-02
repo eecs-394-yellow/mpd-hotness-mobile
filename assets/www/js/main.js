@@ -1,17 +1,17 @@
 (function (window, $) {
 
 var noteTemplate,
-	currentPosition = null,
-	currentLatLon = null;
+  currentPosition = null,
+  currentLatLon = null;
 
 function submitNote() {
     var noteAuthor = $('#author-field').val(),
-		  noteLocation = $('#location-field').val(),
-		  noteText = $('#note-text-field').val();
+      noteLocation = $('#location-field').val(),
+      noteText = $('#note-text-field').val();
     
     if (currentPosition === null) {
-    	console.log("Error: Current GPS position could not be obtained before submitting form");
-    	return;
+      console.log("Error: Current GPS position could not be obtained before submitting form");
+      return;
     }
 
     $.ajax({
@@ -32,7 +32,7 @@ function submitNote() {
 }
 
 function logGPSError() {
-	console.log('Error polling GPS coordinates');
+  console.log('Error polling GPS coordinates');
 }
 
 function refreshList() {
@@ -64,13 +64,13 @@ function refreshList() {
 
 function addNoteToList(note) {
   // Render a note and add it to the page
-	noteLatLon = new LatLon(note.lat, note.lon);
-	if (currentLatLon !== null) {
-		note.distance = currentLatLon.distanceTo(noteLatLon);
-	}
-	else {
-		note.distance = '';
-	}
+  noteLatLon = new LatLon(note.lat, note.lon);
+  if (currentLatLon !== null) {
+    note.distance = currentLatLon.distanceTo(noteLatLon);
+  }
+  else {
+    note.distance = '';
+  }
   var $note = $( $.jqote(noteTemplate, note) ).hide();
   $('.notes').prepend($note);
   $note.animate({
@@ -103,26 +103,26 @@ function clearNotes() {
 }
 
 function updateCurrentPosition(position) {
-	// Update the latitude and longitude in the write-note form
-	currentPosition = position.coords;
-	var lat = currentPosition.latitude,
-		lon = currentPosition.longitude;
-	$('.current-gps-coordinates span').text(lat + ', ' + lon);
-	
-	// Update the distance to each note in the note list
-	currentLatLon = new LatLon(lat, lon);
-	var $notes = $('.note'),
-		numNotes = $notes.length;
-	for (var i=0; i < numNotes; i++) {
-		var $note = $notes.eq(i);
-			noteLatLon = $.data($note[0], 'latLon');
-		$note.find('.distance .value').text( currentLatLon.distanceTo(noteLatLon) + ' km' );
-	}
+  // Update the latitude and longitude in the write-note form
+  currentPosition = position.coords;
+  var lat = currentPosition.latitude,
+    lon = currentPosition.longitude;
+  $('.current-gps-coordinates span').text(lat + ', ' + lon);
+  
+  // Update the distance to each note in the note list
+  currentLatLon = new LatLon(lat, lon);
+  var $notes = $('.note'),
+    numNotes = $notes.length;
+  for (var i=0; i < numNotes; i++) {
+    var $note = $notes.eq(i);
+      noteLatLon = $.data($note[0], 'latLon');
+    $note.find('.distance .value').text( currentLatLon.distanceTo(noteLatLon) + ' km' );
+  }
 }
 
 $(document).ready(function() {
 
-  noteTemplate = $.jqotec('#note-template');
+  hotspotTemplate = $.jqotec('#hotspot-template');
   
   refreshList();
 
@@ -142,9 +142,9 @@ $(document).ready(function() {
   // Update the current position when the page first loads
   // and whenever the device's GPS location changes in the future
   navigator.geolocation.getCurrentPosition(function(position) {
-	  	updateCurrentPosition(position);
-		  navigator.geolocation.watchPosition(updateCurrentPosition, logGPSError, { enableHighAccuracy: true, maximumAge: 2000 });
-	  }, logGPSError, { enableHighAccuracy: true });
+      updateCurrentPosition(position);
+      navigator.geolocation.watchPosition(updateCurrentPosition, logGPSError, { enableHighAccuracy: true, maximumAge: 2000 });
+    }, logGPSError, { enableHighAccuracy: true });
 
 });
 
