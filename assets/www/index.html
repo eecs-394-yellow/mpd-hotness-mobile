@@ -5,95 +5,118 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 	<title>Where U R</title> 
-	<link rel="stylesheet" href="css/jquery.mobile-1.0rc2.min.css" />
-</head> 
 
-	
+	<link rel="stylesheet" href="css/jquery.mobile-1.0rc2.min.css" />
+
+  <script src="js/jquery-1.6.4.min.js"></script>
+  <script src="js/jquery.mobile-1.0rc2.min.js"></script>
+</head> 
 
 <body> 
 
-<!-- Start of first page: #one -->
+
+<!-- Homepage -->
+
+
 <div data-role="page" id="homepage" data-fullscreen="true">
 
-	<div data-role="header">
-		<h1>"Find the hottest places to be"</h1>
-	</div><!-- /header -->
+  <div data-role="header">
+    <h1>"Find the hottest places to be"</h1>
+  </div>
+ 
+  <div data-role="content" style="background-color: white;">
+    <img src="img/logo.jpg" style="margin: auto; display: block;" alt="" />
+    <p><a href="#set" data-role="button">Build A Fire</a></p>
+    <p><a href="#get" data-role="button">Feel The Burn</a></p>
+  </div>
 
-	<div data-role="content" id="one" style="background-color: white;">	
-    	<img src="img/logo.jpg" style="margin: auto; display: block;" />
-		<p><a href="#set" data-role="button">Build A Fire</a></p>	
-		<p><a href="#get" data-role="button">Feel The Burn</a></p>
-	</div><!-- /content -->
-
-</div><!-- /page one -->
+</div>
 
 
-<!-- Start of second page: sending information-->
+<!-- Submit Heat Form -->
+
 <div data-role="page" id="set" data-fullscreen="true">
 
 	<div data-role="header">
 		<h1>Start A Fire</h1>
+	</div>
 
-	</div><!-- /header -->
+	<div data-role="content">
+    <form action="index.php" method="post" class="ui-body ui-body-a ui-corner-all">
+      <fieldset>
+        <div data-role="fieldcontain">
+          <label for="location" class="select">Choose Your Location:</label>
+          <select name="location" id="location">
+            <option value="McGee's Tavern">McGee's Tavern</option>
+            <option value="halligan">Halligan's Bar & Grill</option>
+          </select>
+        </div>
+        <label for="rating" class="ui-hidden-accessible">How hot is it?</label>
+        <input type="range" name="slider" id="rating" value="1" min="1" max="5"  />
+        <button type="submit" data-theme="b" >Burn Baby Burn!</button>
+      </fieldset>
+    </form>
+	</div>
 
-	<div data-role="content" id="one">	
-    				<form action="" method="post" class="ui-body ui-body-a ui-corner-all">
-						<fieldset>
-							<div data-role="fieldcontain">
-								<label for="location" class="select">Choose Your Location:</label>
-								<select name="location" id="Location">
-									<option value="McGee's Tavern">McGee's Tavern</option>
-									<option value="halligan">Halligan's Bar & Grill</option>
-								</select>
-							</div>
-                            <label for="rating" class="ui-hidden-accessible">How hot is it?</label>
-  							<input type="range" name="slider" id="slider-0" value="1" min="1" max="5"  />
-                            <img src="" >
-							<button type="submit" data-theme="b" >Burn Baby Burn!</button>
-						</fieldset>
-					</form>
-	</div><!-- /content -->
-
-</div><!-- /page two -->
+</div>
 
 
-<!-- Start of third page: getting information -->
+<!-- Hotspot List -->
+
+
 <div data-role="page" id="get" data-fullscreen="true">
 
 	<div data-role="header">
 		<h1>Feel The Burn</h1>
-	</div><!-- /header -->
+	</div>
 
-	<div data-role="content" id="one">	
-    	<ul class="ui-listview" data-role="listview">
-			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-			Hallignan's Bar
-			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.7</span>
-			</li>
-			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-			MacFadden's Bar & Grill
-      	  	<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.5</span>
-			</li>
-			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-			Hangge Uppe
-			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.4</span>
-			</li>
-			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-			Fuze Bar
-			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.0</span>
-			</li>
-			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-			McGee's Tavern
-			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">3.9</span>
-			</li>
+	<div data-role="content">
+    <ul class="ui-listview" data-role="listview">
+      <li class="ui-li ui-li-static ui-body-c ui-li-has-count">
+        Hallignan's Bar
+        <span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.7</span>
+      </li>
+      <li class="ui-li ui-li-static ui-body-c ui-li-has-count">
+        MacFadden's Bar & Grill
+        <span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.5</span>
+      </li>
+      <li class="ui-li ui-li-static ui-body-c ui-li-has-count">
+        Hangge Uppe
+        <span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.4</span>
+      </li>
+      <li class="ui-li ui-li-static ui-body-c ui-li-has-count">
+        Fuze Bar
+        <span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.0</span>
+      </li>
+      <li class="ui-li ui-li-static ui-body-c ui-li-has-count">
+        McGee's Tavern
+        <span class="ui-li-count ui-btn-up-c ui-btn-corner-all">3.9</span>
+      </li>
 		</ul>
-		<p><a href="#get" data-role="button">Refresh</a></p>
-	</div><!-- /content -->
-</div><!-- /page-->
+    <div class="ui-body">
+      <button id="refresh-button">Refresh</button>
+      <button id="clear-button">Clear</button>
+    </div>
+	</div>
+</div>
 
 
-<script src="js/jquery-1.6.4.min.js"></script>
-<script src="js/jquery.mobile-1.0rc2.min.js"></script>
+<!-- JavaScript Templates -->
+
+
+<script type="text/x-jqote-template" id="hotspot-template">
+  <![CDATA[
+    <li class="ui-li ui-li-static ui-body-c ui-li-has-count">
+      <%= this.text %>
+      <span class="ui-li-count ui-btn-up-c ui-btn-corner-all"><%= this.rating %></span>
+    </li>
+  ]]>
+</script>
+
+
+<script src="js/jquery.jqote2.min.js"></script>
+<script src="js/lat-lon.js"></script>
+<script src="js/main.js"></script>
 
 
 </body>
