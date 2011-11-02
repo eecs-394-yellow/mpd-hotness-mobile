@@ -8,6 +8,34 @@
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.css" />
 </head> 
 
+<script type="text/javascript">
+
+$("#slider").change(function() {
+    value = $(this).val();
+
+    if(value = 1) {
+        $('#heat').text('Mild');
+    }
+
+    if(value = 2) {
+        $('#heat').text('Hot');
+    }
+
+    if(value = 3) {
+        $('#heat').text('Fire');
+    }
+
+    if(value = 4) {
+        $('#heat').text('Call the fire department!!!');
+    }
+	
+	if(value = 5) {
+        $('#heat').text('RAAAGE!!!');
+    }
+});
+
+</script>
+
 	
 
 <body> 
@@ -21,7 +49,7 @@
 
 	<div data-role="content" id="one" style="background-color: white;">	
     	<img src="img/logo.jpg" style="margin: auto; display: block;" />
-		<p><a href="#set" data-role="button">Build A Fire</a></p>	
+		<p><a href="#set" data-role="button">Start A Fire</a></p>	
 		<p><a href="#get" data-role="button">Feel The Burn</a></p>
 	</div><!-- /content -->
 
@@ -47,8 +75,8 @@
 								</select>
 
                             <label for="rating" class="ui-hidden-accessible">How hot is it?</label>
-  							<input type="range" name="slider" id="slider-0" value="1" min="1" max="5"  />
-                            <img src="" >
+  							<input type="range" name="slider" id="slider" value="1" min="1" max="5"  />
+                            <h1 id="heat" style="text-align: center">Mild</h1>
 							<button type="submit">Burn Baby Burn!</button>
 						</fieldset>
 					</form>
@@ -91,7 +119,7 @@
 	</div><!-- /content -->
 </div><!-- /page-->
 
-	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+	<script src="js/jquery-1.6.4.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script>
 
 </body>
