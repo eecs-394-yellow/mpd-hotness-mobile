@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 	<title>Where U R</title> 
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.css" />
+	<link rel="stylesheet" href="css/style.css" />
 </head> 
 
 	
@@ -20,7 +21,7 @@
 	</div><!-- /header -->
 
 	<div data-role="content" id="one" style="background-color: white;">	
-    	<img src="img/logo.jpg" style="margin: auto; display: block;" />
+    	<img src="img/logo.jpg" class="logo" />
 		<p><a href="#set" data-role="button">Start A Fire</a></p>	
 		<p><a href="#get" data-role="button">Feel The Burn</a></p>
 	</div><!-- /content -->
@@ -37,7 +38,7 @@
 	</div><!-- /header -->
 
 	<div data-role="content">	
-    				<form action="" method="post" class="ui-body ui-body-a ui-corner-all">
+    				<form action="" method="post" class="ui-body ui-body-a ui-corner-all set">
 						<fieldset>
 
 								<label for="location" class="select">Choose Your Location:</label>
@@ -86,13 +87,29 @@
 			McGee's Tavern
 			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">3.9</span>
 			</li>
+			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
+			Sky Bar
+			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">3.9</span>
+			</li>
+			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
+			Centro Club
+			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">3.8</span>
+			</li>
+			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
+			Epic Club
+			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">3.6</span>
+			</li>
+			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
+			The Wit
+			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">3.5</span>
+			</li>
 		</ul>
-		<p><a href="#get" data-role="button">Refresh</a></p>
+		<p><a href="#get" data-role="button" onClick="refresh();">Refresh</a></p>
 	</div><!-- /content -->
 </div><!-- /page-->
 
 	<script src="js/jquery-1.6.4.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script>
+	<script src="js/jquery.mobile-1.0rc2.min.js"></script>
 	<script src="js/script.js"></script>
 
 

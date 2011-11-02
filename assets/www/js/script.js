@@ -1,5 +1,8 @@
 (function (window, $) {
 
+function refresh() {
+ $('ul').listview('refresh');
+}
 
 $(document).ready(function() {
 
