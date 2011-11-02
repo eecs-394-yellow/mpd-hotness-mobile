@@ -36,20 +36,20 @@
 
 	</div><!-- /header -->
 
-	<div data-role="content">	
+	<div data-role="content" id="one">	
     				<form action="" method="post" class="ui-body ui-body-a ui-corner-all">
 						<fieldset>
-
+							<div data-role="fieldcontain">
 								<label for="location" class="select">Choose Your Location:</label>
 								<select name="location" id="Location">
 									<option value="McGee's Tavern">McGee's Tavern</option>
 									<option value="halligan">Halligan's Bar & Grill</option>
 								</select>
-
+							</div>
                             <label for="rating" class="ui-hidden-accessible">How hot is it?</label>
   							<input type="range" name="slider" id="slider-0" value="1" min="1" max="5"  />
                             <img src="" >
-							<button type="submit">Burn Baby Burn!</button>
+							<button type="submit" data-theme="b" >Burn Baby Burn!</button>
 						</fieldset>
 					</form>
 	</div><!-- /content -->
