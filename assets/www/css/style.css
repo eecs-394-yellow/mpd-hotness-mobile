@@ -1,4 +1,8 @@
 
+.ui-page {
+  background: #FFF;
+}
+
 .ui-slider-input {
 	display:none !important;
 }
@@ -15,4 +19,8 @@
 	margin: auto;
 	padding-top: 20px;
 	padding-bottom: 20px;
+}
+
+.center {
+  text-align: center;
 }

@@ -1,155 +1,181 @@
 (function (window, $) {
 
-var noteTemplate,
-  currentPosition = null,
-  currentLatLon = null;
 
-function submitNote() {
-    var noteAuthor = $('#author-field').val(),
-      noteLocation = $('#location-field').val(),
-      noteText = $('#note-text-field').val();
-    
-    if (currentPosition === null) {
-      console.log("Error: Current GPS position could not be obtained before submitting form");
-      return;
+/**
+ * Global Application Object
+ * 
+ * All global variables should be defined as members of this object
+ */
+window.WUR = {
+  hotnessScale: [
+    'Mild',
+    'Hot',
+    'Fire',
+    'Call the fire department!!!',
+    'RAAAGE!!!'
+  ],
+  geolocationRefreshInterval: 10000, // milliseconds
+  currentCoordinates: null, // HTML5 Coordinates object
+  currentLatLon: null, // LatLon object
+  templates: {}
+};
+
+
+/**
+ * Submits the rating form via AJAX
+ */
+function submitRating() {
+  var placeName = $('#places-menu').val(),
+    rating = $('#rating').val();
+
+  $.ajax({
+    dataType: 'jsonp',
+    url: "http://mpd-hotness.nfshost.com/rate_place.php",
+    data: {
+      place_id: placeName,
+      lat: WUR.currentCoordinates.latitude,
+      lon: WUR.currentCoordinates.longitude,
+      rating: rating
     }
-
-    $.ajax({
-      dataType: 'jsonp',
-      url: "http://geonotes.nfshost.com/add_note.php", //need to find DB url
-      data: {
-        device_id: 1, // PhoneGap API method: device.uuid
-        user_name: noteAuthor,
-        location_text: noteLocation,
-        note: noteText,
-        lat: currentPosition.latitude,
-        lon: currentPosition.longitude
-      }
-    }).done(function() {
-      clearForm();
-      refreshList();
+  })
+    .done(function() {
+      alert('Rating submitted successfully');
+      $.mobile.changePage($('#home-page')[0]);
+    })
+    .fail(function() {
+      alert('Error: Failed to submit rating');
     });
 }
 
-function logGPSError() {
-  console.log('Error polling GPS coordinates');
-}
 
-function refreshList() {
+/**
+ * Retrieves the list of nearby places
+ * and calls the given callback on success
+ */
+function getPlaces(callback) {
   $.ajax({
     dataType: 'jsonp',
-    url: "http://geonotes.nfshost.com/list.php"
-  }).done(function( notes ) {
-    var numNotes = notes.length;
-    $('.notes .note').addClass('old');
-    for (var i=0; i < numNotes; i++)
-      {
-        // Add each note to the page
-        var note = notes[i],
-          $existingNote = $('.note-' + note.note_id);
-        if ($existingNote.length === 0)
-          {
-            addNoteToList(note);
-          }
-        else
-          {
-            $existingNote.removeClass('old');
-          }
+    url: "http://mpd-hotness.nfshost.com/list_places.php",
+    data: {
+      lat: WUR.currentCoordinates.latitude,
+      lon: WUR.currentCoordinates.longitude
+    }
+  })
+    .done(function(places) {
+      if (typeof(callback) === 'function') {
+        callback.call(this, places);
       }
-      $('.notes .old').fadeOut(function() {
-        $(this).remove();
-      });
+    })
+    .fail(function() {
+      console.log('Error: Failed to retrieve hotspots');
+    });
+}
+
+
+/**
+ * Updates the user's current geolocation
+ * and calls the given callback on success
+ */
+function updateGeolocation(callback) {
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      var coords = WUR.currentCoordinates = position.coords;
+      $('.your-location').text(coords.latitude + ', ' + coords.longitude);
+      if (typeof(callback) === 'function') {
+        callback.call(this, position);
+      }
+    },
+    function() {
+      console.log('Error: Geolocation failed');
+    },
+    {
+      enableHighAccuracy: true,
+      maximumAge: WUR.geolocationRefreshInterval
+    }
+  );
+}
+
+
+/**
+ * Refreshes the places menu on the rating page
+ * based on the user's current geolocation
+ */
+function refreshPlacesMenu() {
+  updateGeolocation(function() {
+    getPlaces(function(places) {
+      $('#places-menu')
+        .jqotesub(WUR.templates.menuOption, places)
+        .selectmenu('refresh');
+    });
   });
 }
 
-function addNoteToList(note) {
-  // Render a note and add it to the page
-  noteLatLon = new LatLon(note.lat, note.lon);
-  if (currentLatLon !== null) {
-    note.distance = currentLatLon.distanceTo(noteLatLon);
-  }
-  else {
-    note.distance = '';
-  }
-  var $note = $( $.jqote(noteTemplate, note) ).hide();
-  $('.notes').prepend($note);
-  $note.animate({
-    height: 'show'
-  }, 500, 'swing', function() {
-    $(this).animate({
-      opacity: 1
-    }, 500, 'swing');
-  });  
-  $note.data('latLon', noteLatLon);
-}
 
-function clearForm() {
-  // Clear any text in the write-note form fields
-  $('.write-note textarea').each(function() {
-    $(this).val('');
+/**
+ * Refreshes the list of hotspots on the hotspots page
+ */
+function refreshHotspotList() {
+  updateGeolocation(function() {
+    getPlaces(function(places) {
+      $('#hotspots-list')
+        .jqotesub(WUR.templates.listItem, places)
+        .listview('refresh');
+    });
   });
 }
 
-function clearNotes() {
-  // Delete all notes in the database
+
+function clearRatings() {
   $.ajax({
-    url: "http://geonotes.nfshost.com/clear.php"
-  });
-
-  // Remove the notes on the page
-  $('.notes .note').fadeOut(function() {
-    $(this).remove();
-  });
+    dataType: 'jsonp',
+    url: "http://mpd-hotness.nfshost.com/clear_ratings.php"
+  })
+    .done(function() {
+      refreshHotspotList();
+    });
 }
-
-function updateCurrentPosition(position) {
-  // Update the latitude and longitude in the write-note form
-  currentPosition = position.coords;
-  var lat = currentPosition.latitude,
-    lon = currentPosition.longitude;
-  $('.current-gps-coordinates span').text(lat + ', ' + lon);
-  
-  // Update the distance to each note in the note list
-  currentLatLon = new LatLon(lat, lon);
-  var $notes = $('.note'),
-    numNotes = $notes.length;
-  for (var i=0; i < numNotes; i++) {
-    var $note = $notes.eq(i);
-      noteLatLon = $.data($note[0], 'latLon');
-    $note.find('.distance .value').text( currentLatLon.distanceTo(noteLatLon) + ' km' );
-  }
-}
-
-$(document).ready(function() {
-
-  hotspotTemplate = $.jqotec('#hotspot-template');
-  
-  refreshList();
-
-  $('#note-submit-button').click(function() {
-    submitNote();
-    return false; //Turn off the default form behavior
-  });
-  
-  $('#list-refresh-button').click(function() {
-    refreshList();
-  });
-
-  $('#clear-notes-button').click(function() {
-    clearNotes();
-  });
-  
-  // Update the current position when the page first loads
-  // and whenever the device's GPS location changes in the future
-  navigator.geolocation.getCurrentPosition(function(position) {
-      updateCurrentPosition(position);
-      navigator.geolocation.watchPosition(updateCurrentPosition, logGPSError, { enableHighAccuracy: true, maximumAge: 2000 });
-    }, logGPSError, { enableHighAccuracy: true });
 
 
 // Disable jQuery Mobile page transitions
-$(document).bind("mobileinit", function(){
-  defaultPageTransition: 'none'
+$(document).bind('mobileinit', function(){
+  $.mobile.defaultPageTransition = 'none';
+});
+
+
+$(document).ready(function() {
+
+  WUR.templates.listItem = $.jqotec('#hotspot-list-item');
+  WUR.templates.menuOption = $.jqotec('#places-menu-option');
+  
+  $('#submit-hotspot-button').click(function() {
+    submitRating();
+    return false; // Prevent default form behavior
+  });
+  
+  $('#refresh-list-button').click(function() {
+    refreshHotspotList();
+  });
+
+  $('#clear-ratings-button').click(function() {
+    clearRatings();
+  });
+
+  $('#rating-page')
+    .bind('pagebeforeshow', function() {
+      // Refresh the rating page every time it is shown
+      refreshPlacesMenu();
+    })
+    .bind('pageinit', function() {
+      $('#rating').bind('change', function() {
+        var hotness = $(this).val();
+        $('#hotness-scale').text( WUR.hotnessScale[hotness-1] );
+      });
+    });
+
+  $('#hotspots-list-page').one('pagebeforeshow', function() {
+    refreshHotspotList();
+  });
+
 });
 
 

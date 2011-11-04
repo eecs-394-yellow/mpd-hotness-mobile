@@ -16,82 +16,65 @@
 <!-- Homepage -->
 
 
-<div data-role="page" id="homepage" data-fullscreen="true">
+<div data-role="page" id="home-page" data-fullscreen="true">
 
   <div data-role="header">
     <h1>"Find the hottest places to be"</h1>
   </div>
  
-  <div data-role="content" style="background-color: white;">
+  <div data-role="content">
     <img src="img/logo.jpg" class="logo" alt="" />
-    <p><a href="#set" data-role="button">Build A Fire</a></p>
-    <p><a href="#get" data-role="button">Feel The Burn</a></p>
+    <p><a href="#rating-page" data-role="button">Build A Fire</a></p>
+    <p><a href="#hotspots-list-page" data-role="button">Feel The Burn</a></p>
   </div>
 
-  
+</div>
+
+
 <!-- Submit Heat Form -->
 
 
-<div data-role="page" id="set" data-fullscreen="true">
+<div data-role="page" id="rating-page" data-fullscreen="true">
 
 	<div data-role="header">
+    <a href="#home-page" data-icon="arrow-l" data-rel="back">Back</a>
 		<h1>Start A Fire</h1>
 	</div>
 
-	<div data-role="content">	
-    <form action="" method="post" class="ui-body ui-body-a ui-corner-all set">
-      <fieldset>
-        <div data-role="fieldcontain">
-          <label for="location" class="select">Choose Your Location:</label>
-          <select name="location" id="location">
-            <option value="McGee's Tavern">McGee's Tavern</option>
-            <option value="halligan">Halligan's Bar & Grill</option>
-          </select>
+	<div data-role="content">
+    <form action="index.php" method="post" class="ui-body ui-body-a ui-corner-all">
+      <fieldset class="center">
+          <label for="places-menu" class="select">Choose Your Location:</label>
+          <select name="location" id="places-menu"></select>
+        <p>Your current GPS coordinates: <span class="your-location"></span></p>
+        <div>
+          <label for="rating" class="ui-hidden-accessible">How hot is it?</label>
+          <input type="range" name="rating" id="rating" value="1" min="1" max="5"  />
         </div>
-        <label for="rating" class="ui-hidden-accessible">How hot is it?</label>
-        <input type="range" name="slider" id="slider" value="1" min="1" max="5"  />
-        <h1 id="heat" style="text-align: center">Mild</h1>
-        <button type="submit">Burn Baby Burn!</button>
+        <h1 id="hotness-scale" style="text-align: center">Mild</h1>
+        <button id="submit-hotspot-button" type="submit" data-theme="b">Burn Baby Burn!</button>
       </fieldset>
     </form>
 	</div>
 
-  
+</div>
+
+
 <!-- Hotspot List -->
 
 
-<div data-role="page" id="get" data-fullscreen="true">
+<div data-role="page" id="hotspots-list-page" data-fullscreen="true">
 
 	<div data-role="header">
+    <a href="#home-page" data-icon="arrow-l" data-rel="back">Back</a>
 		<h1>Feel The Burn</h1>
 	</div>
 
 	<div data-role="content">
-    <ul class="ui-listview" data-role="listview">
-      <li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-        Hallignan's Bar
-        <span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.7</span>
-      </li>
-      <li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-        MacFadden's Bar & Grill
-        <span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.5</span>
-      </li>
-      <li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-        Hangge Uppe
-        <span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.4</span>
-      </li>
-      <li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-        Fuze Bar
-        <span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.0</span>
-      </li>
-      <li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-        McGee's Tavern
-        <span class="ui-li-count ui-btn-up-c ui-btn-corner-all">3.9</span>
-      </li>
-		</ul>
-    <div class="ui-body">
-      <button id="refresh-button">Refresh</button>
-      <button id="clear-button">Clear</button>
+    <ul id="hotspots-list" data-role="listview"></ul>
+    <div style="margin-top: 30px">
+      <button id="refresh-list-button">Refresh</button>
+      <button id="clear-ratings-button">Clear</button>
     </div>
 	</div>
 </div>
@@ -100,12 +83,21 @@
 <!-- JavaScript Templates -->
 
 
-<script type="text/x-jqote-template" id="hotspot-template">
+<script type="text/x-jqote-template" id="hotspot-list-item">
   <![CDATA[
-    <li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-      <%= this.text %>
-      <span class="ui-li-count ui-btn-up-c ui-btn-corner-all"><%= this.rating %></span>
+    <li class="hotspot ui-li-static ui-body-c">
+      <%= this.place_uuid %>
+      <span class="rating ui-li-count">
+        <% out += (this.rating === null) ? 'No rating' : 'Rating: ' + parseFloat(this.rating); %>
+      </span>
     </li>
+  ]]>
+</script>
+
+
+<script type="text/x-jqote-template" id="places-menu-option">
+  <![CDATA[
+    <option value="<%= this.place_uuid %>"><%= this.place_uuid %></option>  
   ]]>
 </script>
 
@@ -114,7 +106,6 @@
 <script src="js/jquery.jqote2.min.js"></script>
 <script src="js/lat-lon.js"></script>
 <script src="js/main.js"></script>
-<script src="js/script.js"></script>
 <script src="js/jquery.mobile-1.0rc2.min.js"></script>
 
 
