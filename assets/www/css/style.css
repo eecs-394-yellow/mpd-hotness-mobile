@@ -1,0 +1,18 @@
+
+.ui-slider-input {
+	display:none !important;
+}
+
+.logo {
+	margin: auto; 
+	display: block;
+	padding-top: 80px;
+	padding-bottom: 80px;
+}
+
+.set {
+	text-align: center; 
+	margin: auto;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
