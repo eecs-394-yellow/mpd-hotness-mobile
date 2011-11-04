@@ -1,103 +1,182 @@
 (function (window, $) {
 
-function submitNote() {
-    var noteAuthor = $('#author-field').val(),
-      noteLocation = $('#location-field').val(),
-      noteText = $('#note-text-field').val();
-    
-		$.ajax({
-      dataType: 'jsonp',
-			url: "http://geonotes.nfshost.com/add_note.php", //need to find DB url
-			data: {
-				device_id: 1, // PhoneGap API method: device.uuid
-				user_name: noteAuthor,
-				location_text: noteLocation,
-				note: noteText,
-        lat: 80,
-        lon: 80
-			}
-		}).done(function() {
-      clearForm();
-			refreshList();
-		});
-    
-}
 
-function refreshList() {
+/**
+ * Global Application Object
+ * 
+ * All global variables should be defined as members of this object
+ */
+window.WUR = {
+  hotnessScale: [
+    'Mild',
+    'Hot',
+    'Fire',
+    'Call the fire department!!!',
+    'RAAAGE!!!'
+  ],
+  geolocationRefreshInterval: 10000, // milliseconds
+  currentCoordinates: null, // HTML5 Coordinates object
+  currentLatLon: null, // LatLon object
+  templates: {}
+};
+
+
+/**
+ * Submits the rating form via AJAX
+ */
+function submitRating() {
+  var placeName = $('#places-menu').val(),
+    rating = $('#rating').val();
+
   $.ajax({
     dataType: 'jsonp',
-    url: "http://geonotes.nfshost.com/list.php"
-  }).done(function( notes ) {
-    var numNotes = notes.length;
-    $('.notes .note').addClass('old');
-    for (var i=0; i < numNotes; i++)
-      {
-        // Add each note to the page
-        var note = notes[i],
-          $existingNote = $('.note-' + note.note_id);
-        if ($existingNote.length === 0)
-          {
-            var $location = $('<div class="location-description"><span class="label">Location:</span></div>').append(note.location_description),
-              $latlong = $('<div class="latlong"><span class="label">GPS Coordinates:</span></div>').append(note.lat + ', ' + note.lon),
-              $author = $('<div class="author"><span class="label">User:</span></div>').append(note.user_name),
-              $text = $('<div class="note-text"><span class="label">Note:</span></div>').append(note.note_text),
-              $note = $('<div class="note"></div>')
-                .addClass('note-' + note.note_id)
-                .hide()
-                .css('opacity', 0)
-                .append($author, $location, $latlong, $text);
-            $('.notes').prepend($note);
-            $note.animate({
-              height: 'show'
-            }, 500, 'swing', function() {
-              $(this).animate({
-                opacity: 1
-              }, 500, 'swing');
-            });
-          }
-        else
-          {
-            $existingNote.removeClass('old');
-          }
-      }
-      $('.notes .old').fadeOut(function() {
-        $(this).remove();
-      });
-  });
+    url: "http://mpd-hotness.nfshost.com/rate_place.php",
+    data: {
+      place_id: placeName,
+      lat: WUR.currentCoordinates.latitude,
+      lon: WUR.currentCoordinates.longitude,
+      rating: rating
+    }
+  })
+    .done(function() {
+      alert('Rating submitted successfully');
+      $.mobile.changePage($('#home-page')[0]);
+    })
+    .fail(function() {
+      alert('Error: Failed to submit rating');
+    });
 }
 
-function clearForm() {
-  $('.write-note textarea').each(function() {
-    $(this).val('');
-  });
-}
 
-function clearNotes() {
+/**
+ * Retrieves the list of nearby places
+ * and calls the given callback on success
+ */
+function getPlaces(callback) {
   $.ajax({
-    url: "http://geonotes.nfshost.com/clear.php"
-  });
-  $('.notes .note').fadeOut(function() {
-    $(this).remove();
+    dataType: 'jsonp',
+    url: "http://mpd-hotness.nfshost.com/list_places.php",
+    data: {
+      lat: WUR.currentCoordinates.latitude,
+      lon: WUR.currentCoordinates.longitude
+    }
+  })
+    .done(function(places) {
+      if (typeof(callback) === 'function') {
+        callback.call(this, places);
+      }
+    })
+    .fail(function() {
+      console.log('Error: Failed to retrieve hotspots');
+    });
+}
+
+
+/**
+ * Updates the user's current geolocation
+ * and calls the given callback on success
+ */
+function updateGeolocation(callback) {
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      var coords = WUR.currentCoordinates = position.coords;
+      $('.your-location').text(coords.latitude + ', ' + coords.longitude);
+      if (typeof(callback) === 'function') {
+        callback.call(this, position);
+      }
+    },
+    function() {
+      console.log('Error: Geolocation failed');
+    },
+    {
+      enableHighAccuracy: true,
+      maximumAge: WUR.geolocationRefreshInterval
+    }
+  );
+}
+
+
+/**
+ * Refreshes the places menu on the rating page
+ * based on the user's current geolocation
+ */
+function refreshPlacesMenu() {
+  updateGeolocation(function() {
+    getPlaces(function(places) {
+      $('#places-menu')
+        .jqotesub(WUR.templates.menuOption, places)
+        .selectmenu('refresh');
+    });
   });
 }
+
+
+/**
+ * Refreshes the list of hotspots on the hotspots page
+ */
+function refreshHotspotList() {
+  updateGeolocation(function() {
+    getPlaces(function(places) {
+      $('#hotspots-list')
+        .jqotesub(WUR.templates.listItem, places)
+        .listview('refresh');
+    });
+  });
+}
+
+
+function clearRatings() {
+  $.ajax({
+    dataType: 'jsonp',
+    url: "http://mpd-hotness.nfshost.com/clear_ratings.php"
+  })
+    .done(function() {
+      refreshHotspotList();
+    });
+}
+
+
+// Disable jQuery Mobile page transitions
+$(document).bind('mobileinit', function(){
+  $.mobile.defaultPageTransition = 'none';
+});
+
 
 $(document).ready(function() {
 
-  refreshList();
+  WUR.templates.listItem = $.jqotec('#hotspot-list-item');
+  WUR.templates.menuOption = $.jqotec('#places-menu-option');
+  
+  $('#submit-hotspot-button').click(function() {
+    submitRating();
+    return false; // Prevent default form behavior
+  });
+  
+  $('#refresh-list-button').click(function() {
+    refreshHotspotList();
+  });
 
-	$('#note-submit-button').click(function() {
-    submitNote();
-		return false; //Turn off the default form behavior
-	});
-	
-	$('#list-refresh-button').click(function() {
-		refreshList();
-	});
+  $('#clear-ratings-button').click(function() {
+    clearRatings();
+  });
 
-  $('#clear-notes-button').click(function() {
-    clearNotes();
+  $('#rating-page')
+    .bind('pagebeforeshow', function() {
+      // Refresh the rating page every time it is shown
+      refreshPlacesMenu();
+    })
+    .bind('pageinit', function() {
+      $('#rating').bind('change', function() {
+        var hotness = $(this).val();
+        $('#hotness-scale').text( WUR.hotnessScale[hotness-1] );
+      });
+    });
+
+  $('#hotspots-list-page').one('pagebeforeshow', function() {
+    refreshHotspotList();
   });
 
 });
+
 
 })(window, jQuery);

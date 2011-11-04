@@ -5,118 +5,108 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 	<title>Where U R</title> 
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.css" />
+
+	<link rel="stylesheet" href="css/jquery.mobile-1.0rc2.min.css" />
 	<link rel="stylesheet" href="css/style.css" />
 </head> 
 
-	
-
 <body> 
 
-<!-- Start of first page: #one -->
-<div data-role="page" id="homepage" data-fullscreen="true">
+
+<!-- Homepage -->
+
+
+<div data-role="page" id="home-page" data-fullscreen="true">
+
+  <div data-role="header">
+    <h1>"Find the hottest places to be"</h1>
+  </div>
+ 
+  <div data-role="content">
+    <img src="img/logo.jpg" class="logo" alt="" />
+    <p><a href="#rating-page" data-role="button">Build A Fire</a></p>
+    <p><a href="#hotspots-list-page" data-role="button">Feel The Burn</a></p>
+  </div>
+
+</div>
+
+
+<!-- Submit Heat Form -->
+
+
+<div data-role="page" id="rating-page" data-fullscreen="true">
 
 	<div data-role="header">
-		<h1>"Find the hottest places to be"</h1>
-	</div><!-- /header -->
-
-	<div data-role="content" id="one" style="background-color: white;">	
-    	<img src="img/logo.jpg" class="logo" />
-		<p><a href="#set" data-role="button">Start A Fire</a></p>	
-		<p><a href="#get" data-role="button">Feel The Burn</a></p>
-	</div><!-- /content -->
-
-</div><!-- /page one -->
-
-
-<!-- Start of second page: sending information-->
-<div data-role="page" id="set" data-fullscreen="true">
-
-	<div data-role="header">
+    <a href="#home-page" data-icon="arrow-l" data-rel="back">Back</a>
 		<h1>Start A Fire</h1>
+	</div>
 
-	</div><!-- /header -->
+	<div data-role="content">
+    <form action="index.php" method="post" class="ui-body ui-body-a ui-corner-all">
+      <fieldset class="center">
+          <label for="places-menu" class="select">Choose Your Location:</label>
+          <select name="location" id="places-menu"></select>
+        <p>Your current GPS coordinates: <span class="your-location"></span></p>
+        <div>
+          <label for="rating" class="ui-hidden-accessible">How hot is it?</label>
+          <input type="range" name="rating" id="rating" value="1" min="1" max="5"  />
+        </div>
+        <h1 id="hotness-scale" style="text-align: center">Mild</h1>
+        <button id="submit-hotspot-button" type="submit" data-theme="b">Burn Baby Burn!</button>
+      </fieldset>
+    </form>
+	</div>
 
-	<div data-role="content">	
-    				<form action="" method="post" class="ui-body ui-body-a ui-corner-all set">
-						<fieldset>
-
-								<label for="location" class="select">Choose Your Location:</label>
-								<select name="location" id="Location">
-									<option value="McGee's Tavern">McGee's Tavern</option>
-									<option value="halligan">Halligan's Bar & Grill</option>
-								</select>
-
-                            <label for="rating" class="ui-hidden-accessible">How hot is it?</label>
-  							<input type="range" name="slider" id="slider" value="1" min="1" max="5"  />
-                            <h1 id="heat" style="text-align: center">Mild</h1>
-							<button type="submit">Burn Baby Burn!</button>
-						</fieldset>
-						<p><a href="" data-role="button" id="test">Test</a></p>
-
-					</form>
-	</div><!-- /content -->
-
-</div><!-- /page two -->
+</div>
 
 
-<!-- Start of third page: getting information -->
-<div data-role="page" id="get" data-fullscreen="true">
+<!-- Hotspot List -->
+
+
+<div data-role="page" id="hotspots-list-page" data-fullscreen="true">
 
 	<div data-role="header">
+    <a href="#home-page" data-icon="arrow-l" data-rel="back">Back</a>
 		<h1>Feel The Burn</h1>
-	</div><!-- /header -->
+	</div>
 
-	<div data-role="content" id="one">	
-    	<ul class="ui-listview" data-role="listview">
-			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-			Hallignan's Bar
-			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.7</span>
-			</li>
-			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-			MacFadden's Bar & Grill
-      	  	<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.5</span>
-			</li>
-			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-			Hangge Uppe
-			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.4</span>
-			</li>
-			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-			Fuze Bar
-			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">4.0</span>
-			</li>
-			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-			McGee's Tavern
-			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">3.9</span>
-			</li>
-			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-			Sky Bar
-			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">3.9</span>
-			</li>
-			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-			Centro Club
-			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">3.8</span>
-			</li>
-			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-			Epic Club
-			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">3.6</span>
-			</li>
-			<li class="ui-li ui-li-static ui-body-c ui-li-has-count">
-			The Wit
-			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">3.5</span>
-			</li>
-		</ul>
-		<p><a href="#get" data-role="button" id="refresh">Refresh</a></p>
-	</div><!-- /content -->
-</div><!-- /page-->
-
-	<script src="js/jquery-1.6.4.min.js"></script>
-	<script src="js/jquery.mobile-1.0rc2.min.js"></script>
-	<script type="text/javascript" src="js/script.js"></script>
-	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=true"></script>
+	<div data-role="content">
+    <ul id="hotspots-list" data-role="listview"></ul>
+    <div style="margin-top: 30px">
+      <button id="refresh-list-button">Refresh</button>
+      <button id="clear-ratings-button">Clear</button>
+    </div>
+	</div>
+</div>
 
 
+<!-- JavaScript Templates -->
 
+
+<script type="text/x-jqote-template" id="hotspot-list-item">
+  <![CDATA[
+    <li class="hotspot ui-li-static ui-body-c">
+      <%= this.place_uuid %>
+      <span class="rating ui-li-count">
+        <% out += (this.rating === null) ? 'No rating' : 'Rating: ' + parseFloat(this.rating); %>
+      </span>
+    </li>
+  ]]>
+</script>
+
+
+<script type="text/x-jqote-template" id="places-menu-option">
+  <![CDATA[
+    <option value="<%= this.place_uuid %>"><%= this.place_uuid %></option>  
+  ]]>
+</script>
+
+
+<script src="js/jquery-1.6.4.min.js"></script>
+<script src="js/jquery.jqote2.min.js"></script>
+<script src="js/lat-lon.js"></script>
+<script src="js/main.js"></script>
+<script src="js/jquery.mobile-1.0rc2.min.js"></script>
 
 
 </body>
