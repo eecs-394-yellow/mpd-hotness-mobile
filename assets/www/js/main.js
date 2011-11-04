@@ -146,6 +146,10 @@ $(document).ready(function() {
       navigator.geolocation.watchPosition(updateCurrentPosition, logGPSError, { enableHighAccuracy: true, maximumAge: 2000 });
     }, logGPSError, { enableHighAccuracy: true });
 
+
+// Disable jQuery Mobile page transitions
+$(document).bind("mobileinit", function(){
+  defaultPageTransition: 'none'
 });
 
 
