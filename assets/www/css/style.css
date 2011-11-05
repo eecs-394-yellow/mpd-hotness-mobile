@@ -12,6 +12,10 @@
 	display:none !important;
 }
 
+.rating-form .ui-slider {
+  width: 80%;
+}
+
 .logo {
 	margin: auto; 
 	display: block;
