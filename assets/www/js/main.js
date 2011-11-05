@@ -40,7 +40,7 @@ function submitRating() {
   })
     .done(function() {
       alert('Rating submitted successfully');
-      $.mobile.changePage($('#home-page')[0]);
+      $.mobile.changePage($('#home-page'));
     })
     .fail(function() {
       alert('Error: Failed to submit rating');

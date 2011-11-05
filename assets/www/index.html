@@ -42,11 +42,11 @@
 	</div>
 
 	<div data-role="content">
-    <form action="index.php" method="post" class="ui-body ui-body-a ui-corner-all">
+    <form action="index.php" method="post" class="rating-form ui-body ui-body-a ui-corner-all">
       <fieldset class="center">
           <label for="places-menu" class="select">Choose Your Location:</label>
           <select name="location" id="places-menu"></select>
-        <p>Your current GPS coordinates: <span class="your-location"></span></p>
+        <p>Your current GPS coordinates:<br><span class="your-location"></span></p>
         <div>
           <label for="rating" class="ui-hidden-accessible">How hot is it?</label>
           <input type="range" name="rating" id="rating" value="1" min="1" max="5"  />
@@ -87,6 +87,11 @@
   <![CDATA[
     <li class="hotspot ui-li-static ui-body-c">
       <%= this.place_uuid %>
+      <% if (typeof this.distance !== 'undefined') { %>
+        <span class="distance ui-li-count">
+          Distance: <%= parseFloat(this.distance).toFixed(1) %> miles
+        </span>
+      <% } %>
       <span class="rating ui-li-count">
         <% out += (this.rating === null) ? 'No rating' : 'Rating: ' + parseFloat(this.rating); %>
       </span>

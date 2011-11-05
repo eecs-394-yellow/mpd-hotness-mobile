@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, App!</string>
-    <string name="app_name">MPD Hotness</string>
+    <string name="app_name">WhereUR</string>
 
 </resources>
