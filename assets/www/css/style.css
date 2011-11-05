@@ -3,6 +3,11 @@
   background: #FFF;
 }
 
+.ui-header .ui-title {
+  margin-left: 0;
+  margin-right: 0;
+}
+
 .ui-slider-input {
 	display:none !important;
 }
