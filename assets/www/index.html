@@ -89,7 +89,7 @@
       <%= this.place_uuid %>
       <% if (typeof this.distance !== 'undefined') { %>
         <span class="distance ui-li-count">
-          <% out += 'Distance: ' + parseFloat(this.distance).toFixed(1) + ' miles'; %>
+          Distance: <%= parseFloat(this.distance).toFixed(1) %> miles
         </span>
       <% } %>
       <span class="rating ui-li-count">
