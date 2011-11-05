@@ -87,6 +87,11 @@
   <![CDATA[
     <li class="hotspot ui-li-static ui-body-c">
       <%= this.place_uuid %>
+      <% if (typeof this.distance !== 'undefined') { %>
+        <span class="distance ui-li-count">
+          <% out += 'Distance: ' + parseFloat(this.distance).toFixed(1) + ' miles'; %>
+        </span>
+      <% } %>
       <span class="rating ui-li-count">
         <% out += (this.rating === null) ? 'No rating' : 'Rating: ' + parseFloat(this.rating); %>
       </span>

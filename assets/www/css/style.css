@@ -33,3 +33,7 @@
 .center {
   text-align: center;
 }
+
+.hotspot .distance {
+  right: 80px;
+}
