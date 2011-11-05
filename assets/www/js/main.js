@@ -24,7 +24,7 @@ window.WUR = {
 /**
  * Submits the rating form via AJAX
  */
-function submitRating() {
+WUR.submitRating = function() {
   var placeName = $('#places-menu').val(),
     rating = $('#rating').val();
 
@@ -52,7 +52,7 @@ function submitRating() {
  * Retrieves the list of nearby places
  * and calls the given callback on success
  */
-function getPlaces(callback) {
+WUR.getPlaces = function(callback) {
   $.ajax({
     dataType: 'jsonp',
     url: "http://mpd-hotness.nfshost.com/list_places.php",
@@ -76,7 +76,7 @@ function getPlaces(callback) {
  * Updates the user's current geolocation
  * and calls the given callback on success
  */
-function updateGeolocation(callback) {
+WUR.updateGeolocation = function(callback) {
   navigator.geolocation.getCurrentPosition(
     function(position) {
       var coords = WUR.currentCoordinates = position.coords;
@@ -100,9 +100,9 @@ function updateGeolocation(callback) {
  * Refreshes the places menu on the rating page
  * based on the user's current geolocation
  */
-function refreshPlacesMenu() {
-  updateGeolocation(function() {
-    getPlaces(function(places) {
+WUR.refreshPlacesMenu = function() {
+  WUR.updateGeolocation(function() {
+    WUR.getPlaces(function(places) {
       $('#places-menu')
         .jqotesub(WUR.templates.menuOption, places)
         .selectmenu('refresh');
@@ -114,9 +114,9 @@ function refreshPlacesMenu() {
 /**
  * Refreshes the list of hotspots on the hotspots page
  */
-function refreshHotspotList() {
-  updateGeolocation(function() {
-    getPlaces(function(places) {
+WUR.refreshHotspotList = function() {
+  WUR.updateGeolocation(function() {
+    WUR.getPlaces(function(places) {
       $('#hotspots-list')
         .jqotesub(WUR.templates.listItem, places)
         .listview('refresh');
@@ -125,13 +125,13 @@ function refreshHotspotList() {
 }
 
 
-function clearRatings() {
+WUR.clearRatings = function() {
   $.ajax({
     dataType: 'jsonp',
     url: "http://mpd-hotness.nfshost.com/clear_ratings.php"
   })
     .done(function() {
-      refreshHotspotList();
+      WUR.refreshHotspotList();
     });
 }
 
@@ -148,22 +148,22 @@ $(document).ready(function() {
   WUR.templates.menuOption = $.jqotec('#places-menu-option');
   
   $('#submit-hotspot-button').click(function() {
-    submitRating();
+    WUR.submitRating();
     return false; // Prevent default form behavior
   });
   
   $('#refresh-list-button').click(function() {
-    refreshHotspotList();
+    WUR.refreshHotspotList();
   });
 
   $('#clear-ratings-button').click(function() {
-    clearRatings();
+    WUR.clearRatings();
   });
 
   $('#rating-page')
     .bind('pagebeforeshow', function() {
       // Refresh the rating page every time it is shown
-      refreshPlacesMenu();
+      WUR.refreshPlacesMenu();
     })
     .bind('pageinit', function() {
       $('#rating').bind('change', function() {
@@ -173,7 +173,7 @@ $(document).ready(function() {
     });
 
   $('#hotspots-list-page').one('pagebeforeshow', function() {
-    refreshHotspotList();
+    WUR.refreshHotspotList();
   });
 
 });
