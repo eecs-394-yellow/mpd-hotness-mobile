@@ -119,7 +119,6 @@ WUR.updateGeolocation = function(callback) {
         lat = coords.latitude,
         lon = coords.longitude;
       WUR.currentLatLng = new google.maps.LatLng(lat, lon);
-      $('.your-location').text(lat + ', ' + lon);
       if (typeof(callback) === 'function') {
         callback.call(this, lat, lon, position);
       }

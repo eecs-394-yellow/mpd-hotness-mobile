@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="css/jquery.mobile-1.0rc2.min.css" />
 	<link rel="stylesheet" href="css/style.css" />
 
-  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=geometry,places&sensor=true"></script>
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=geometry,places&amp;sensor=true"></script>
 </head> 
 
 <body> 
@@ -46,13 +46,10 @@
 	<div data-role="content">
     <form action="index.php" method="post" class="rating-form ui-body ui-body-a ui-corner-all">
       <fieldset class="center">
-          <label for="places-menu" class="select">Choose Your Location:</label>
-          <select name="location" id="places-menu"></select>
-        <p>Your current GPS coordinates:<br><span class="your-location"></span></p>
-        <div>
-          <label for="rating" class="ui-hidden-accessible">How hot is it?</label>
-          <input type="range" name="rating" id="rating" value="1" min="1" max="5"  />
-        </div>
+        <label for="places-menu" class="select">Choose Your Location:</label>
+        <select name="location" id="places-menu"></select>
+        <label for="rating">How hot is it?</label>
+        <input type="range" name="rating" id="rating" value="1" min="1" max="5"  />
         <h1 id="hotness-scale" style="text-align: center">Mild</h1>
         <button id="submit-hotspot-button" type="submit" data-theme="b">Burn Baby Burn!</button>
       </fieldset>

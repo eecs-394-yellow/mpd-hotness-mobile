@@ -8,6 +8,7 @@
  * - jQuery >= 1.5
  * - Google Maps JavaScript API V3 Places Library
  * 
+ * By Ethan Romba
  * Inspired by Glenn Baker
  * https://gist.github.com/828536
  */
