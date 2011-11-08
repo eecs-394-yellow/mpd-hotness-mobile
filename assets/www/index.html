@@ -8,6 +8,8 @@
 
 	<link rel="stylesheet" href="css/jquery.mobile-1.0rc2.min.css" />
 	<link rel="stylesheet" href="css/style.css" />
+
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=geometry,places&sensor=true"></script>
 </head> 
 
 <body> 
@@ -86,15 +88,13 @@
 <script type="text/x-jqote-template" id="hotspot-list-item">
   <![CDATA[
     <li class="hotspot ui-li-static ui-body-c">
-      <%= this.place_uuid %>
-      <% if (typeof this.distance !== 'undefined') { %>
-        <span class="distance ui-li-count">
-          Distance: <%= parseFloat(this.distance).toFixed(1) %> miles
-        </span>
-      <% } %>
+      <%= this.name %>
+      <span class="distance ui-li-count">
+        Distance: <%= (this.distance / 1000).toFixed(1) %> km
+      </span>
       <span class="rating ui-li-count">
         <% out += (this.rating === null) ? 'No rating' : 'Rating: ' + parseFloat(this.rating); %>
-      </span>
+      </span>      
     </li>
   ]]>
 </script>
@@ -102,14 +102,14 @@
 
 <script type="text/x-jqote-template" id="places-menu-option">
   <![CDATA[
-    <option value="<%= this.place_uuid %>"><%= this.place_uuid %></option>  
+    <option value="<%= this.id %>"><%= this.name %></option>  
   ]]>
 </script>
 
 
 <script src="js/jquery-1.6.4.min.js"></script>
 <script src="js/jquery.jqote2.min.js"></script>
-<script src="js/lat-lon.js"></script>
+<script src="js/search-google-places.js"></script>
 <script src="js/main.js"></script>
 <script src="js/jquery.mobile-1.0rc2.min.js"></script>
 

@@ -16,9 +16,18 @@ window.WUR = {
   ],
   geolocationRefreshInterval: 10000, // milliseconds
   currentCoordinates: null, // HTML5 Coordinates object
-  currentLatLon: null, // LatLon object
-  templates: {}
+  currentLatLng: null, // Google Maps LatLng object
+  templates: {},
+  searchRadius: 5000, // meters
+  destinationTypes: ['bar'] // Types of Google Places (see http://goo.gl/ChNhe)
 };
+
+/**
+ * Used to sort Google-Places search results by distance, ascending
+ */
+WUR.compareDistance = function(a, b) {
+  return a.distance - b.distance;
+}
 
 
 /**
@@ -49,11 +58,14 @@ WUR.submitRating = function() {
 
 
 /**
- * Retrieves the list of nearby places
+ * Retrieves the current average rating
+ * for each location in the database
  * and calls the given callback on success
+ * 
+ * Returns a jqXHR object
  */
-WUR.getPlaces = function(callback) {
-  $.ajax({
+WUR.getRatings = function(callback) {
+  return $.ajax({
     dataType: 'jsonp',
     url: "http://mpd-hotness.nfshost.com/list_places.php",
     data: {
@@ -67,7 +79,31 @@ WUR.getPlaces = function(callback) {
       }
     })
     .fail(function() {
-      console.log('Error: Failed to retrieve hotspots');
+      console.log('Error: Failed to retrieve destination ratings');
+    });
+}
+
+
+/**
+ * Retrieves the list of nearby places
+ * using the Google Places API
+ * and calls the given callback on success
+ * 
+ * Returns a jQuery Promise
+ */
+WUR.getPlaces = function(callback) {
+  return searchGooglePlaces({
+    location: WUR.currentLatLng,
+    radius: WUR.searchRadius,
+    types: WUR.destinationTypes
+  })
+    .done(function(results, status) {
+      if (typeof(callback) === 'function') {
+        callback.call(this, results, status);
+      }
+    })
+    .fail(function() {
+      console.log('Error: Failed to search Google Places');
     });
 }
 
@@ -79,10 +115,13 @@ WUR.getPlaces = function(callback) {
 WUR.updateGeolocation = function(callback) {
   navigator.geolocation.getCurrentPosition(
     function(position) {
-      var coords = WUR.currentCoordinates = position.coords;
-      $('.your-location').text(coords.latitude + ', ' + coords.longitude);
+      var coords = WUR.currentCoordinates = position.coords,
+        lat = coords.latitude,
+        lon = coords.longitude;
+      WUR.currentLatLng = new google.maps.LatLng(lat, lon);
+      $('.your-location').text(lat + ', ' + lon);
       if (typeof(callback) === 'function') {
-        callback.call(this, position);
+        callback.call(this, lat, lon, position);
       }
     },
     function() {
@@ -115,11 +154,38 @@ WUR.refreshPlacesMenu = function() {
  * Refreshes the list of hotspots on the hotspots page
  */
 WUR.refreshHotspotList = function() {
-  WUR.updateGeolocation(function() {
-    WUR.getPlaces(function(places) {
-      $('#hotspots-list')
-        .jqotesub(WUR.templates.listItem, places)
-        .listview('refresh');
+  WUR.updateGeolocation(function(lat, lon) {
+
+    // Query Google Places and WhereUR database simultaneously
+    $.when( WUR.getPlaces(), WUR.getRatings() )
+      .done(function(placesResult, ratingsResult) {
+
+        var places = placesResult[0],
+          ratings = ratingsResult[0];
+
+        // Add distance and rating to each Google-Places result
+        var numPlaces = places.length;
+          numRatings = ratings.length;
+        for (var i=0; i < numPlaces; i++) {
+          var place = places[i],
+            rating = null;
+          for (var j=0; j < numRatings; j++) {
+            if (place.id == ratings[j].place_uuid) {
+              rating = ratings[j].rating;
+              break;
+            }
+          }
+          place.rating = rating;
+          place.distance = google.maps.geometry.spherical
+            .computeDistanceBetween(place.geometry.location, WUR.currentLatLng);
+        }
+
+        // Sort results by distance
+        places.sort(WUR.compareDistance);
+
+        $('#hotspots-list')
+          .jqotesub(WUR.templates.listItem, places)
+          .listview('refresh');
     });
   });
 }
