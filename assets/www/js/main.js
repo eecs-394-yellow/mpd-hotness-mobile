@@ -177,10 +177,17 @@ WUR.refreshHotspotList = function() {
           place.rating = rating;
           place.distance = google.maps.geometry.spherical
             .computeDistanceBetween(place.geometry.location, WUR.currentLatLng);
-        }
+		}
 
         // Sort results by distance
         places.sort(WUR.compareDistance);
+		
+		// Remove results outside of radius
+		for (var i = places.length-1; i >= 0; i--) {
+		if (places[i].distance > WUR.searchRadius){
+				places.splice(i,1);
+			}
+		}
 
         $('#hotspots-list')
           .jqotesub(WUR.templates.listItem, places)
