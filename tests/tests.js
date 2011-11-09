@@ -63,19 +63,19 @@ describe('WhereUR App', function() {
 	it('should populate the page with several places when a successful request is returned', function() {
 		var fakeValidPlaces = [
 			{
-				place_uuid: 'test1',
+				place_id: 'test1',
 				rating: 1,
 				lat: 81,
 				lon: 18
 			},
 			{
-				place_uuid: 'test2',
+				place_id: 'test2',
 				rating: 5,
 				lat: 82,
 				lon: 28
 			},
 			{
-				place_uuid: 'test3',
+				place_id: 'test3',
 				rating: 3.5,
 				lat: 83,
 				lon: 38

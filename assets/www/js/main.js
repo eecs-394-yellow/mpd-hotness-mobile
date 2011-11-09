@@ -169,7 +169,7 @@ WUR.refreshHotspotList = function() {
           var place = places[i],
             rating = null;
           for (var j=0; j < numRatings; j++) {
-            if (place.id == ratings[j].place_uuid) {
+            if (place.id == ratings[j].place_id) {
               rating = ratings[j].rating;
               break;
             }
