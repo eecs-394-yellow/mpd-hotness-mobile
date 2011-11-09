@@ -8,8 +8,8 @@
   margin-right: 0;
 }
 
-.ui-slider-input {
-	display:none !important;
+.rate.ui-slider-input {
+	display:none;
 }
 
 .rating-form input.ui-slider {

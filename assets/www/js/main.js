@@ -224,6 +224,12 @@ $(document).ready(function() {
   $('#clear-ratings-button').click(function() {
     WUR.clearRatings();
   });
+  
+  $('#refresh-list-with-option-button').click(function() {
+    var radius = $('#radius').val();
+	WUR.searchRadius = (radius-1) * 1000;
+    WUR.refreshHotspotList();
+  });
 
   $('#rating-page')
     .bind('pagebeforeshow', function() {
