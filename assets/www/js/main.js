@@ -227,7 +227,7 @@ $(document).ready(function() {
   
   $('#refresh-list-with-option-button').click(function() {
     var radius = $('#radius').val();
-	WUR.searchRadius = (radius-1) * 1000;
+	WUR.searchRadius = (radius * 1000);
     WUR.refreshHotspotList();
   });
 
