@@ -140,11 +140,13 @@ WUR.updateGeolocation = function(callback) {
  * based on the user's current geolocation
  */
 WUR.refreshPlacesMenu = function() {
+  var $placesMenu = $('#places-menu').selectmenu('disable');
   WUR.updateGeolocation(function() {
     WUR.getPlaces(WUR.nearbyRadius, function(places) {
-      $('#places-menu')
+      $placesMenu
         .jqotesub(WUR.templates.menuOption, places)
-        .selectmenu('refresh');
+        .selectmenu('refresh')
+        .selectmenu('enable');
     });
   });
 }
