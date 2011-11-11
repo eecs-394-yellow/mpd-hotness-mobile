@@ -9,7 +9,7 @@
 }
 
 .rate.ui-slider-input {
-	display:none;
+  display:none;
 }
 
 .rating-form input.ui-slider {
@@ -34,6 +34,27 @@
   text-align: center;
 }
 
+.list-heading {
+  margin: 0 0 20px;
+}
+
+.list-heading .distance {
+  position: absolute;
+  right: 90px;
+}
+
+.list-heading .rating {
+  position: absolute;
+  right: 30px;
+}
+
 .hotspot .distance {
-  right: 80px;
+  right: 74px;
+  text-align: right;
+  width: 45px;
+}
+
+.hotspot .rating {
+  text-align: center;
+  width: 40px;
 }

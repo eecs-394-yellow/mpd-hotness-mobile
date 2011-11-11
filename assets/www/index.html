@@ -70,6 +70,11 @@
 	</div>
 
 	<div data-role="content">
+	<div class="list-heading">
+	   <span class="location">Location</span>
+	   <span class="distance">Distance</span>
+	   <span class="rating">Rating</span>
+	</div>
     <ul id="hotspots-list" data-role="listview"></ul>
     <div style="margin-top: 30px">
       <button id="refresh-list-button">Refresh</button>
@@ -108,10 +113,10 @@
     <li class="hotspot ui-li-static ui-body-c">
       <%= this.name %>
       <span class="distance ui-li-count">
-        Distance: <%= (this.distance / 1000).toFixed(1) %> km
+        <%= (this.distance / 1000).toFixed(1) %> km
       </span>
       <span class="rating ui-li-count">
-        <% out += (this.rating === null) ? 'No rating' : 'Rating: ' + parseFloat(this.rating); %>
+        <% out += (this.rating === null) ? 'None' : parseFloat(this.rating).toFixed(1); %>
       </span>      
     </li>
   ]]>
