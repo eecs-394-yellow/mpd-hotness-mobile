@@ -103,7 +103,10 @@ WUR.getPlaces = function(radius, callback) {
         callback.call(this, results, status);
       }
     })
-    .fail(function() {
+    .fail(function(results, status) {
+      if (status == google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
+        alert("Hey, you're not in a bar! You should get out more!");
+      }
       console.log('Error: Failed to search Google Places');
     });
 }
