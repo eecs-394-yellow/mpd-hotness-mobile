@@ -19,6 +19,7 @@ window.WUR = {
   currentLatLng: null, // Google Maps LatLng object
   templates: {},
   searchRadius: 5000, // meters
+  nearbyRadius: 500, // meters
   destinationTypes: ['bar'] // Types of Google Places (see http://goo.gl/ChNhe)
 };
 
@@ -91,10 +92,10 @@ WUR.getRatings = function(callback) {
  * 
  * Returns a jQuery Promise
  */
-WUR.getPlaces = function(callback) {
+WUR.getPlaces = function(radius, callback) {
   return searchGooglePlaces({
     location: WUR.currentLatLng,
-    radius: WUR.searchRadius,
+    radius: radius,
     types: WUR.destinationTypes
   })
     .done(function(results, status) {
@@ -140,7 +141,7 @@ WUR.updateGeolocation = function(callback) {
  */
 WUR.refreshPlacesMenu = function() {
   WUR.updateGeolocation(function() {
-    WUR.getPlaces(function(places) {
+    WUR.getPlaces(WUR.nearbyRadius, function(places) {
       $('#places-menu')
         .jqotesub(WUR.templates.menuOption, places)
         .selectmenu('refresh');
@@ -156,7 +157,7 @@ WUR.refreshHotspotList = function() {
   WUR.updateGeolocation(function(lat, lon) {
 
     // Query Google Places and WhereUR database simultaneously
-    $.when( WUR.getPlaces(), WUR.getRatings() )
+    $.when( WUR.getPlaces(WUR.searchRadius), WUR.getRatings() )
       .done(function(placesResult, ratingsResult) {
 
         var places = placesResult[0],
