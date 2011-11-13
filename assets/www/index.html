@@ -113,7 +113,7 @@
     <li class="hotspot ui-li-static ui-body-c">
       <%= this.name %>
       <span class="distance ui-li-count">
-        <%= (this.distance / 1000).toFixed(1) %> km
+        <%= (this.distance * 0.000621371192).toFixed(1) %> mi
       </span>
       <span class="rating ui-li-count">
         <% out += (this.rating === null) ? 'None' : parseFloat(this.rating).toFixed(1); %>
