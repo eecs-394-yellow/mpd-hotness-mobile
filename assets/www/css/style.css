@@ -58,3 +58,9 @@
   text-align: center;
   width: 40px;
 }
+
+#map_canvas {
+	height: min-height: 100%;
+	padding: 0px;
+	margin: 0px;
+}

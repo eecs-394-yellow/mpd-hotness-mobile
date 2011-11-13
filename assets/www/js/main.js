@@ -259,6 +259,10 @@ $(document).ready(function() {
   $('#hotspots-list-page').one('pagebeforeshow', function() {
     WUR.refreshHotspotList();
   });
+  
+  $('#map_canvas').css({height:screen.height}); 
+  $('#map_canvas').gmap({'center': '59.3426606750, 18.0736160278'});
+
 
 });
 
