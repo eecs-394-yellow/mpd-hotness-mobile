@@ -251,8 +251,8 @@ $(document).ready(function() {
     })
     .bind('pageinit', function() {
       $('#rating').bind('change', function() {
-        var hotness = $(this).val();
-        $('#hotness-scale').text( WUR.hotnessScale[hotness-1] );
+        var hotness = 'hotness-' + $(this).val();
+		$('#hotness-scale').attr('class', hotness);
       });
     });
 

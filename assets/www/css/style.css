@@ -59,6 +59,33 @@
   width: 40px;
 }
 
+#hotness-scale{
+	width: 200px;
+	height: 40px;
+	margin: 20px auto;
+}
+	
+
+.hotness-1{
+	background: url('../img/pepper-sprite-small.png') no-repeat 0 0;
+}
+
+.hotness-2{
+	background: url('../img/pepper-sprite-small.png') no-repeat 0 -40px;
+}
+	
+.hotness-3{
+	background: url('../img/pepper-sprite-small.png') no-repeat 0 -80px;
+}
+	
+.hotness-4{
+	background: url('../img/pepper-sprite-small.png') no-repeat 0 -120px;
+}
+
+.hotness-5{
+	background: url('../img/pepper-sprite-small.png') no-repeat 0 -160px;
+}
+	
 #map_canvas {
 	height: min-height: 100%;
 	padding: 0px;
