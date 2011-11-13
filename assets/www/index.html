@@ -72,19 +72,11 @@
 	<div data-role="content">
 	<div class="list-heading">
 	   <span class="location">Location</span>
-	   <span class="distance">Distance</span>
-	   <span class="rating">Rating</span>
+	   <span class="distance"><a>Distance</a></span>
+	   <span class="rating"><a>Rating</a></span>
 	</div>
     <ul id="hotspots-list" data-role="listview"></ul>
 	
-	<!--- 
-    <div style="margin-top: 30px">
-      <button id="refresh-list-button">Refresh</button>
-      <button id="clear-ratings-button">Clear</button>
-	  <a href="#option" data-rel="dialog" data-role="button">Search Options</a>
-	  <a href="#map" data-role="button">Map</a>	  
-    </div>
-	--->
 	
 	</div>
 	<div data-role="footer" style="width: 100%">
@@ -123,11 +115,42 @@
 <div data-role="page" id="map" data-fullscreen="true">
 
   <div data-role="header">
+  <a href="#home-page" data-icon="arrow-l" data-rel="back">Back</a>
     <h1>Map</h1>
   </div>
  
   <div data-role="content" style="padding: 0px; margin: 0px;">
 	<div id="map_canvas" style="width:100%;"></div>
+  </div>
+  
+  	<div data-role="footer" style="width: 100%">
+		<div data-role="navbar" style="width: 100%">
+			<ul style="width: 100%">
+				<li id="refresh-list-button"><a>Refresh</a></li>
+				<li><a href="#hotspots-list-page">List</a></li>
+				<li><a href="#option" data-rel="dialog">Radius</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div>
+
+</div>
+
+<!-- Details Page -->
+
+<div data-role="page" id="detail" data-fullscreen="true">
+
+  <div data-role="header">
+  <a href="#hotspots-list-page" data-icon="arrow-l" data-rel="back">Back</a>
+    <h1>Destination Details</h1>
+  </div>
+ 
+  <div data-role="content" class="detail">
+	<h1>Fuze</h1>
+	<p>Rating: 4.30</p>
+	<p>Distance: 0.28 Miles</p>
+	<p>Number of people rated: -</p>
+	<p style="padding-top: 30px;"><a href="#" data-role="button">See Map</a></p>
+	
   </div>
   
   	<div data-role="footer" style="width: 100%">
@@ -148,7 +171,7 @@
 <script type="text/x-jqote-template" id="hotspot-list-item">
   <![CDATA[
     <li class="hotspot ui-li-static ui-body-c">
-	<a href="#map-<%= j %>">
+	<a href="#detail-<%= j %>">
       <%= this.name %>
 	  </a>
       <span class="distance ui-li-count">
