@@ -76,12 +76,25 @@
 	   <span class="rating">Rating</span>
 	</div>
     <ul id="hotspots-list" data-role="listview"></ul>
+	
+	<!--- 
     <div style="margin-top: 30px">
       <button id="refresh-list-button">Refresh</button>
       <button id="clear-ratings-button">Clear</button>
 	  <a href="#option" data-rel="dialog" data-role="button">Search Options</a>
-	  <a href="#map" data-role="button">Map</a>
+	  <a href="#map" data-role="button">Map</a>	  
     </div>
+	--->
+	
+	</div>
+	<div data-role="footer" style="width: 100%">
+		<div data-role="navbar" style="width: 100%">
+			<ul style="width: 100%">
+				<li id="refresh-list-button"><a>Refresh</a></li>
+				<li><a href="#map">Map</a></li>
+				<li><a href="#option" data-rel="dialog">Radius</a></li>
+			</ul>
+		</div><!-- /navbar -->
 	</div>
 </div>
 
@@ -113,9 +126,19 @@
     <h1>Map</h1>
   </div>
  
-  <div data-role="content">
+  <div data-role="content" style="padding: 0px; margin: 0px;">
 	<div id="map_canvas" style="width:100%;"></div>
   </div>
+  
+  	<div data-role="footer" style="width: 100%">
+		<div data-role="navbar" style="width: 100%">
+			<ul style="width: 100%">
+				<li id="refresh-list-button"><a>Refresh</a></li>
+				<li><a href="#hotspots-list-page">List</a></li>
+				<li><a href="#option" data-rel="dialog">Radius</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div>
 
 </div>
 
@@ -125,7 +148,9 @@
 <script type="text/x-jqote-template" id="hotspot-list-item">
   <![CDATA[
     <li class="hotspot ui-li-static ui-body-c">
+	<a href="#map-<%= j %>">
       <%= this.name %>
+	  </a>
       <span class="distance ui-li-count">
         <%= (this.distance * 0.000621371192).toFixed(1) %> mi
       </span>

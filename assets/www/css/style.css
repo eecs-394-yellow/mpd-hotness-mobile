@@ -40,12 +40,12 @@
 
 .list-heading .distance {
   position: absolute;
-  right: 90px;
+  right: 150px;
 }
 
 .list-heading .rating {
   position: absolute;
-  right: 30px;
+  right: 90px;
 }
 
 .hotspot .distance {
