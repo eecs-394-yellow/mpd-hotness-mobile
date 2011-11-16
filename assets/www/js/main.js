@@ -14,6 +14,7 @@ window.WUR = {
     'Call the fire department!!!',
     'RAAAGE!!!'
   ],
+  maximumRatingAge: 60, // minutes
   geolocationRefreshInterval: 10000, // milliseconds
   currentCoordinates: null, // HTML5 Coordinates object
   currentLatLng: null, // Google Maps LatLng object

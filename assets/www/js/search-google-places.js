@@ -22,11 +22,14 @@ var searchGooglePlaces = (function(window, google, $) {
 
     service.search(request, function (results, status) {
 
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        deferred.resolve(results, status);
-      }
-      else {
-        deferred.reject(results, status);
+      switch (status) {
+        case google.maps.places.PlacesServiceStatus.OK:
+        case google.maps.places.PlacesServiceStatus.ZERO_RESULTS:
+          deferred.resolve(results, status);
+          break;
+        default:
+          deferred.reject(results, status);
+          break;
       }
 
     });
