@@ -21,7 +21,11 @@ window.WUR = {
   templates: {},
   searchRadius: 5000, // meters
   nearbyRadius: 500, // meters
-  destinationTypes: ['bar'] // Types of Google Places (see http://goo.gl/ChNhe)
+  destinationTypes: ['bar'], // Types of Google Places (see http://goo.gl/ChNhe)
+  places: [],
+  markers: [],
+  map: null,
+  $map: null
 };
 
 /**
@@ -202,6 +206,92 @@ WUR.refreshHotspotList = function() {
         });
     });
 }
+
+
+WUR.loadMapPage = function(places) {
+  if (WUR.map == null) {
+    // Initialize map
+    var mapOptions = {
+      center: WUR.currentLatLng,
+      mapTypeControl: false,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      panControl: false,
+      streetViewControl: false,
+      zoom: 15
+    };
+    WUR.$map = $('#map-canvas');
+    WUR.map = new google.maps.Map(WUR.$map[0], mapOptions);
+    WUR.destinationMarker = {
+      image: new google.maps.MarkerImage('img/bar-marker.png',
+        // Image dimensions
+        new google.maps.Size(32, 37),
+        // The origin for this image
+        new google.maps.Point(0,0),
+        // The anchor for this image (e.g. the base of a pin)
+        new google.maps.Point(16, 35)
+      ),
+      hotspot: {
+        coord: [3, 3, 28, 28],
+        type: 'rect'
+      }
+    };
+    WUR.currentPosMarker = {
+      image: new google.maps.MarkerImage('img/blue-dot.png',
+        // Image dimensions
+        new google.maps.Size(19, 32),
+        // The origin for this image
+        new google.maps.Point(0, 0),
+        // The anchor for this image (e.g. the base of a pin)
+        new google.maps.Point(9, 31)
+      ),
+      hotspot: {
+        coord: [0, 12, 0, 6, 6, 0, 18, 6, 18, 12, 9, 31],
+        type: 'poly'
+      }
+    };
+    WUR.infoWindow = new google.maps.InfoWindow();
+  }
+  else {
+    // Clear existing map markers
+    var markers = WUR.markers,
+      numMarkers = markers.length;
+    for (var i=0; i < numMarkers; i++) {
+      markers[i].setMap(null);
+    }
+    WUR.markers = [];
+  }
+
+  // Add specified places to the map
+  var numPlaces = places.length,
+    bounds = new google.maps.LatLngBounds();
+  for (var j=0; j < numPlaces; j++) {
+    var placeLatLng = places[j].geometry.location,
+      marker = new google.maps.Marker({
+        position: placeLatLng,
+        map: WUR.map,
+        icon: WUR.destinationMarker.image,
+        shape: WUR.destinationMarker.hotspot,
+        place: places[j]
+      });
+    WUR.markers.push(marker);
+    bounds.extend(placeLatLng);
+    google.maps.event.addListener(marker, 'click', function() {
+      WUR.infoWindow.setContent(this.place.name);
+      WUR.infoWindow.open(WUR.map, this);
+    });
+  }
+
+  // Add a marker for the user's current location
+  WUR.markers.push(new google.maps.Marker({
+    position: WUR.currentLatLng,
+    map: WUR.map,
+    icon: WUR.currentPosMarker.image,
+    shape: WUR.currentPosMarker.hotspot
+  }));
+  bounds.extend(WUR.currentLatLng); 
+
+  // Position the map so that all places are visible
+  WUR.map.fitBounds(bounds);
 }
 
 
@@ -216,22 +306,48 @@ WUR.clearRatings = function() {
 }
 
 
-// Disable jQuery Mobile page transitions
-$(document).bind('mobileinit', function(){
-  $.mobile.defaultPageTransition = 'none';
-});
+WUR.resizeMap = function() {
+  if (WUR.map !== null) {
+    var viewportHeight = $.mobile.pageContainer.height(),
+      headerHeight = $('#map').find('.ui-header').outerHeight(),
+      footerHeight = $('#map').find('.ui-footer').outerHeight();
+    WUR.$map.css('min-height', viewportHeight - headerHeight - footerHeight);
+    if (WUR.map !== undefined) {
+      google.maps.event.trigger(WUR.map, 'resize');
+    }
+  }
+}
 
 
-$(document).ready(function() {
+$(document)
+  // Disable jQuery Mobile page transitions
+  .bind('mobileinit', function(){
+    $.mobile.defaultPageTransition = 'none';
+  })
+
+  .ready(function() {
 
   WUR.templates.listItem = $.jqotec('#hotspot-list-item');
   WUR.templates.menuOption = $.jqotec('#places-menu-option');
-  
+
+  $('#rating')
+    .bind('pagebeforeshow', function() {
+      // Refresh the rating page every time it is shown
+      WUR.refreshPlacesMenu();
+    })
+    .bind('pageinit', function() {
+      var $hotnessScale = $('#hotness-scale');
+      $('#rating-slider').bind('change', function() {
+        var hotness = 'hotness-' + $(this).val();
+        $hotnessScale.attr('class', hotness);
+      });
+    });
+
   $('#submit-hotspot-button').click(function() {
     WUR.submitRating();
     return false; // Prevent default form behavior
   });
-  
+
   $('#refresh-list-button').click(function() {
     WUR.refreshHotspotList();
   });
@@ -239,10 +355,10 @@ $(document).ready(function() {
   $('#clear-ratings-button').click(function() {
     WUR.clearRatings();
   });
-  
+
   $('#refresh-list-with-option-button').click(function() {
     var radius = $('#radius').val();
-	WUR.searchRadius = (radius * 1609.344);
+  WUR.searchRadius = (radius * 1609.344);
     WUR.refreshHotspotList();
   });
 
@@ -253,20 +369,64 @@ $(document).ready(function() {
     })
     .bind('pageinit', function() {
       $('#rating').bind('change', function() {
-        var hotness = 'hotness-' + $(this).val();
-		$('#hotness-scale').attr('class', hotness);
+        var hotness = $(this).val();
+        $('#hotness-scale').text( WUR.hotnessScale[hotness-1] );
       });
     });
 
   $('#hotspots').one('pagebeforeshow', function() {
     WUR.refreshHotspotList();
   });
-  
-  $('#map_canvas').css({height:screen.height}); 
-  $('#map_canvas').gmap({'center': '59.3426606750, 18.0736160278'});
 
+  $('#map').bind('pageshow', function() {
+    WUR.resizeMap();
+  });
 
-});
+  $(window).bind('throttledresize', function() {
+    WUR.resizeMap();
+  });
 
+  $(document).bind('pagebeforechange', function(event, data) {
+    if (typeof data.toPage === 'string') {
+      var match = /map(\?p=([0-9]+))?$/.exec(data.toPage);
+      if (match !== null) {
+        WUR.updateGeolocation()
+          .done(function() {
+            WUR.getPlaces(WUR.searchRadius)
+              .done(function() {
+                if (match[2] === undefined) {
+                  WUR.loadMapPage(WUR.places);
+                }
+                else {
+                  var i = parseInt(match[2]);
+                  WUR.loadMapPage(WUR.places.slice(i, i+1));
+                }
+                // Change to the map page
+                $.mobile.changePage($('#map'), {
+                  dataUrl: data.toPage
+                });
+              });
+          });
+
+        // Cancel the default jQuery Mobile page-loading operations
+        event.preventDefault();
+      }
+//      else if (match = ) {
+//        WUR.updateGeolocation()
+//          .done(function() {
+//            WUR.getPlaces(WUR.searchRadius)
+//              .done(function() {
+//                // Create the page
+//                $.mobile.pageContainer.jqoteapp(template, WUR.places[urlParam]);
+//                // Change to the new detail page
+//                $.mobile.changePage($('#detail' + param));
+//                // Cancel the default jQuery Mobile page-loading operatoins
+//                event.preventDefault();
+//              });
+//          });
+//      }
+      }
+    })
+  });
 
 })(window, jQuery);

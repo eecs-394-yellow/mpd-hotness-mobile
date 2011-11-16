@@ -48,8 +48,8 @@
       <fieldset class="center">
         <label for="places-menu" class="select">Choose Your Location:</label>
         <select name="location" id="places-menu"></select>
-        <label for="rating">How hot is it?</label>
-        <input class="rate" type="range" name="rating" id="rating" value="1" min="1" max="5"  />
+        <label for="rating-slider">How hot is it?</label>
+        <input class="rate" type="range" name="rating" id="rating-slider" value="1" min="1" max="5"  />
         <h1 id="hotness-scale" style="text-align: center" class="hotness-1"></h1>
         <button id="submit-hotspot-button" type="submit" data-theme="b">Burn Baby Burn!</button>
       </fieldset>
@@ -98,7 +98,9 @@
 	</div>
 </div>
 
+
 <!-- List Option Dialog Page -->
+
 
 <div data-role="page" id="option" data-fullscreen="true">
 
@@ -118,16 +120,19 @@
 
 </div>
 
+
 <!-- Maps Page -->
+
 
 <div data-role="page" id="map" data-fullscreen="true">
 
   <div data-role="header">
+    <a href="#" data-icon="arrow-l" data-rel="back">Back</a>
     <h1>Map</h1>
   </div>
  
-  <div data-role="content" style="padding: 0px; margin: 0px;">
-	<div id="map_canvas" style="width:100%;"></div>
+  <div data-role="content">
+    <div id="map-canvas" style="width: 100%;"></div>
   </div>
   
   	<div data-role="footer" style="width: 100%">
@@ -142,13 +147,14 @@
 
 </div>
 
+
 <!-- JavaScript Templates -->
 
 
 <script type="text/x-jqote-template" id="hotspot-list-item">
   <![CDATA[
     <li class="hotspot ui-li-static ui-body-c">
-	<a href="#map-<%= j %>">
+	<a href="#map?p=<%= j %>">
       <%= this.name %>
 	  </a>
       <span class="distance ui-li-count">
@@ -172,6 +178,7 @@
 <script src="js/jquery-1.6.4.min.js"></script>
 <script src="js/jquery.jqote2.min.js"></script>
 <script src="js/search-google-places.js"></script>
+<script src="js/get-current-position.js"></script>
 <script src="js/main.js"></script>
 <script src="js/jquery.mobile-1.0rc2.min.js"></script>
 <script src="js/jquery.ui.map.full.min.js" type="text/javascript"></script>
