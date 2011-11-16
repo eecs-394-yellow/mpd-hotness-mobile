@@ -71,7 +71,8 @@ WUR.getRatings = function(callback) {
     url: "http://mpd-hotness.nfshost.com/list_places.php",
     data: {
       lat: WUR.currentCoordinates.latitude,
-      lon: WUR.currentCoordinates.longitude
+      lon: WUR.currentCoordinates.longitude,
+      max_age_minutes: WUR.maximumRatingAge
     }
   })
     .done(function(places) {
