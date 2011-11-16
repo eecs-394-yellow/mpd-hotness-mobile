@@ -50,7 +50,7 @@ WUR.submitRating = function() {
   })
     .done(function() {
       alert('Rating submitted successfully');
-      $.mobile.changePage($('#home-page'));
+      $.mobile.changePage($('#home'));
     })
     .fail(function() {
       alert('Error: Failed to submit rating');
@@ -244,7 +244,7 @@ $(document).ready(function() {
     WUR.refreshHotspotList();
   });
 
-  $('#rating-page')
+  $('#rating')
     .bind('pagebeforeshow', function() {
       // Refresh the rating page every time it is shown
       WUR.refreshPlacesMenu();
@@ -256,7 +256,7 @@ $(document).ready(function() {
       });
     });
 
-  $('#hotspots-list-page').one('pagebeforeshow', function() {
+  $('#hotspots').one('pagebeforeshow', function() {
     WUR.refreshHotspotList();
   });
   

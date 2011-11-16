@@ -18,7 +18,7 @@
 <!-- Homepage -->
 
 
-<div data-role="page" id="home-page" data-fullscreen="true">
+<div data-role="page" id="home" data-fullscreen="true">
 
   <div data-role="header">
     <h1>"Find the hottest places to be"</h1>
@@ -26,8 +26,8 @@
  
   <div data-role="content">
     <img src="img/logo.jpg" class="logo" alt="" />
-    <p><a href="#rating-page" data-role="button">Build A Fire</a></p>
-    <p><a href="#hotspots-list-page" data-role="button">Feel The Burn</a></p>
+    <p><a href="#rating" data-role="button">Build A Fire</a></p>
+    <p><a href="#hotspots" data-role="button">Feel The Burn</a></p>
   </div>
 
 </div>
@@ -36,10 +36,10 @@
 <!-- Submit Heat Form -->
 
 
-<div data-role="page" id="rating-page" data-fullscreen="true">
+<div data-role="page" id="rating" data-fullscreen="true">
 
 	<div data-role="header">
-    <a href="#home-page" data-icon="arrow-l" data-rel="back">Back</a>
+    <a href="#home" data-icon="arrow-l" data-rel="back">Back</a>
 		<h1>Start A Fire</h1>
 	</div>
 
@@ -62,10 +62,10 @@
 <!-- Hotspot List -->
 
 
-<div data-role="page" id="hotspots-list-page" data-fullscreen="true">
+<div data-role="page" id="hotspots" data-fullscreen="true">
 
 	<div data-role="header">
-    <a href="#home-page" data-icon="arrow-l" data-rel="back">Back</a>
+    <a href="#home" data-icon="arrow-l" data-rel="back">Back</a>
 		<h1>Feel The Burn</h1>
 	</div>
 
@@ -111,7 +111,7 @@
 		<fieldset class="center">
 			<label for="radius">Select Search Radius</label>
 			<input type="range" name="radius" id="radius" value="5" min="1" max="5"  />
-			<a href="#hotspots-list-page" data-rel="back" data-role="button" id="refresh-list-with-option-button" data-theme="b">Search</a>
+			<a href="#hotspots" data-rel="back" data-role="button" id="refresh-list-with-option-button" data-theme="b">Search</a>
 		</fieldset>
 		</form>
   </div>
@@ -134,7 +134,7 @@
 		<div data-role="navbar" style="width: 100%">
 			<ul style="width: 100%">
 				<li id="refresh-list-button"><a>Refresh</a></li>
-				<li><a href="#hotspots-list-page">List</a></li>
+				<li><a href="#hotspots">List</a></li>
 				<li><a href="#option" data-rel="dialog">Radius</a></li>
 			</ul>
 		</div><!-- /navbar -->
