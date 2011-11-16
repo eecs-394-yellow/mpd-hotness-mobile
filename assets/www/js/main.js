@@ -34,12 +34,14 @@ WUR.compareDistance = function(a, b) {
 
 /**
  * Submits the rating form via AJAX
+ * 
+ * Returns a jqXHR object
  */
 WUR.submitRating = function() {
   var placeName = $('#places-menu').val(),
     rating = $('#rating').val();
 
-  $.ajax({
+  return $.ajax({
     dataType: 'jsonp',
     url: "http://mpd-hotness.nfshost.com/rate_place.php",
     data: {
@@ -66,7 +68,7 @@ WUR.submitRating = function() {
  * 
  * Returns a jqXHR object
  */
-WUR.getRatings = function(callback) {
+WUR.getRatings = function() {
   return $.ajax({
     dataType: 'jsonp',
     url: "http://mpd-hotness.nfshost.com/list_places.php",
@@ -76,11 +78,6 @@ WUR.getRatings = function(callback) {
       max_age_minutes: WUR.maximumRatingAge
     }
   })
-    .done(function(places) {
-      if (typeof(callback) === 'function') {
-        callback.call(this, places);
-      }
-    })
     .fail(function() {
       console.log('Error: Failed to retrieve destination ratings');
     });
@@ -94,22 +91,19 @@ WUR.getRatings = function(callback) {
  * 
  * Returns a jQuery Promise
  */
-WUR.getPlaces = function(radius, callback) {
+WUR.getPlaces = function(radius) {
   return searchGooglePlaces({
     location: WUR.currentLatLng,
     radius: radius,
     types: WUR.destinationTypes
   })
     .done(function(results, status) {
-      if (typeof(callback) === 'function') {
-        callback.call(this, results, status);
-      }
+      WUR.places = results;
     })
     .fail(function(results, status) {
-      if (status == google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
-        alert("Hey, you're not in a bar! You should get out more!");
+      if (status != google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
+        console.log('Error: Failed to search Google Places');
       }
-      console.log('Error: Failed to search Google Places');
     });
 }
 
@@ -117,26 +111,23 @@ WUR.getPlaces = function(radius, callback) {
 /**
  * Updates the user's current geolocation
  * and calls the given callback on success
+ * 
+ * Returns a jQuery Promise
  */
-WUR.updateGeolocation = function(callback) {
-  navigator.geolocation.getCurrentPosition(
-    function(position) {
+WUR.updateGeolocation = function() {
+  return getCurrentPosition({
+    enableHighAccuracy: true,
+    maximumAge: WUR.geolocationRefreshInterval
+  })
+    .done(function(position) {
       var coords = WUR.currentCoordinates = position.coords,
         lat = coords.latitude,
         lon = coords.longitude;
       WUR.currentLatLng = new google.maps.LatLng(lat, lon);
-      if (typeof(callback) === 'function') {
-        callback.call(this, lat, lon, position);
-      }
-    },
-    function() {
-      console.log('Error: Geolocation failed');
-    },
-    {
-      enableHighAccuracy: true,
-      maximumAge: WUR.geolocationRefreshInterval
-    }
-  );
+    })
+    .fail(function() {
+      console.log('Error: Failed to detect geolocation');
+    });
 }
 
 
@@ -146,14 +137,21 @@ WUR.updateGeolocation = function(callback) {
  */
 WUR.refreshPlacesMenu = function() {
   var $placesMenu = $('#places-menu').selectmenu('disable');
-  WUR.updateGeolocation(function() {
-    WUR.getPlaces(WUR.nearbyRadius, function(places) {
-      $placesMenu
-        .jqotesub(WUR.templates.menuOption, places)
-        .selectmenu('refresh')
-        .selectmenu('enable');
+  WUR.updateGeolocation()
+    .done(function() {
+      WUR.getPlaces(WUR.nearbyRadius)
+        .done(function(places) {
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+            $placesMenu
+              .jqotesub(WUR.templates.menuOption, places)
+              .selectmenu('refresh')
+              .selectmenu('enable');
+          }
+          else {
+            alert("Hey, you're not in a bar! You should get out more often!");
+          }
+        });
     });
-  });
 }
 
 
@@ -161,47 +159,49 @@ WUR.refreshPlacesMenu = function() {
  * Refreshes the list of hotspots on the hotspots page
  */
 WUR.refreshHotspotList = function() {
-  WUR.updateGeolocation(function(lat, lon) {
+  WUR.updateGeolocation()
+    .done(function() {
 
-    // Query Google Places and WhereUR database simultaneously
-    $.when( WUR.getPlaces(WUR.searchRadius), WUR.getRatings() )
-      .done(function(placesResult, ratingsResult) {
+      // Query Google Places and WhereUR database simultaneously
+      $.when( WUR.getPlaces(WUR.searchRadius), WUR.getRatings() )
+        .done(function(placesResult, ratingsResult) {
 
-        var places = placesResult[0],
+          var places = placesResult[0],
           ratings = ratingsResult[0];
 
-        // Add distance and rating to each Google-Places result
-        var numPlaces = places.length;
+          // Add distance and rating to each Google-Places result
+          var numPlaces = places.length;
           numRatings = ratings.length;
-        for (var i=0; i < numPlaces; i++) {
-          var place = places[i],
+          for (var i=0; i < numPlaces; i++) {
+            var place = places[i],
             rating = null;
-          for (var j=0; j < numRatings; j++) {
-            if (place.id == ratings[j].place_id) {
-              rating = ratings[j].rating;
-              break;
+            for (var j=0; j < numRatings; j++) {
+              if (place.id == ratings[j].place_id) {
+                rating = ratings[j].rating;
+                break;
+              }
+            }
+            place.rating = rating;
+            place.distance = google.maps.geometry.spherical
+            .computeDistanceBetween(place.geometry.location, WUR.currentLatLng);
+          }
+
+          // Sort results by distance
+          places.sort(WUR.compareDistance);
+
+          // Remove results outside of radius
+          for (i = places.length-1; i >= 0; i--) {
+            if (places[i].distance > WUR.searchRadius){
+              places.splice(i,1);
             }
           }
-          place.rating = rating;
-          place.distance = google.maps.geometry.spherical
-            .computeDistanceBetween(place.geometry.location, WUR.currentLatLng);
-		}
 
-        // Sort results by distance
-        places.sort(WUR.compareDistance);
-		
-		// Remove results outside of radius
-		for (var i = places.length-1; i >= 0; i--) {
-		if (places[i].distance > WUR.searchRadius){
-				places.splice(i,1);
-			}
-		}
-
-        $('#hotspots-list')
-          .jqotesub(WUR.templates.listItem, places)
-          .listview('refresh');
+          $('#hotspots-list')
+            .jqotesub(WUR.templates.listItem, places)
+            .listview('refresh');
+        });
     });
-  });
+}
 }
 
 
