@@ -77,14 +77,7 @@
 	</div>
     <ul id="hotspots-list" data-role="listview"></ul>
 	
-	<!--- 
-    <div style="margin-top: 30px">
-      <button id="refresh-list-button">Refresh</button>
-      <button id="clear-ratings-button">Clear</button>
-	  <a href="#option" data-rel="dialog" data-role="button">Search Options</a>
-	  <a href="#map" data-role="button">Map</a>	  
     </div>
-	--->
 	
 	</div>
 	<div data-role="footer" style="width: 100%">
@@ -147,6 +140,31 @@
 
 </div>
 
+<!-- Details Page -->
+
+
+<div data-role="page" id="detail" data-fullscreen="true">
+
+  <div data-role="header">
+    <a href="#hotspots-list-page" data-icon="arrow-l" data-rel="back">Back</a>
+    <h1>Destination Details</h1>
+  </div>
+
+  <div data-role="content">
+  </div>
+
+  <div data-role="footer" style="width: 100%">
+    <div data-role="navbar" style="width: 100%">
+      <ul style="width: 100%">
+        <li id="refresh-list-button"><a>Refresh</a></li>
+        <li><a href="#hotspots">List</a></li>
+        <li><a href="#option" data-rel="dialog">Radius</a></li>
+      </ul>
+    </div><!-- /navbar -->
+  </div>
+
+</div>
+
 
 <!-- JavaScript Templates -->
 
@@ -171,6 +189,28 @@
 <script type="text/x-jqote-template" id="places-menu-option">
   <![CDATA[
     <option value="<%= this.id %>"><%= this.name %></option>  
+  ]]>
+</script>
+
+
+<script type="text/x-jqote-template" id="detail-page-content">
+  <![CDATA[
+    <h2 class="name"><%= this.name %></h2>
+    <p class="rating">
+      <span class="label">Rating:</span>
+      <span class="value"><%= this.name %></span>
+    </p>
+    <p class="distance">
+      <span class="label">Distance:</span>
+      <span class="value"><%= (this.distance * 0.000621371192).toFixed(1) %> mi</span>
+    </p>
+    <p class="votes">
+      <span class="label">Votes:</span>
+      <span class="value"><%= (this.rating_count === undefined) ? 'None' : this.rating_count %></span>
+    </p>
+    <p style="padding-top: 30px;">
+      <a href="#map?p=<%= this.index %>" data-role="button">See Map</a>
+    </p>
   ]]>
 </script>
 
