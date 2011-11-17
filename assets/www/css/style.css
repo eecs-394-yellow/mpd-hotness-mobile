@@ -35,36 +35,61 @@
 }
 
 .list-heading {
-  margin: 0 0 20px;
+  margin: -.5em 0;
+  overflow: auto;
 }
 
-.list-heading .distance {
-  position: absolute;
-  right: 150px;
+@media all and (min-width: 560px) {
+  .list-heading {
+    margin-top: -3.5em;
+  }
 }
 
-.list-heading .rating {
-  position: absolute;
-  right: 90px;
-}
-
-.hotspot .distance {
-  right: 74px;
+.sort-buttons {
+  margin: 0;
+  padding: 0;
   text-align: right;
-  width: 45px;
+  width: 100%;
 }
 
+.sort-buttons fieldset {
+  margin: 0;
+}
+
+.sort-buttons .ui-controlgroup-label {
+    display: inline-block;
+    margin: 0 2% 0 0;
+    padding-top: 0.6em;
+    vertical-align: top;
+    width: auto;  
+}
+
+.sort-buttons .ui-controlgroup-controls {
+  display: inline-block;
+  width: auto;
+}
+
+.hotspot.ui-li-has-count .ui-btn-inner a.ui-link-inherit {
+  padding-right: 150px;
+}
+
+.hotspot .distance,
 .hotspot .rating {
   text-align: center;
   width: 40px;
 }
+
+.hotspot .distance {
+  right: 100px;
+}
+
+/* Hotness Scale */
 
 #hotness-scale{
 	width: 200px;
 	height: 40px;
 	margin: 20px auto;
 }
-	
 
 .hotness-1{
 	background: url('../img/pepper-sprite-small.png') no-repeat 0 0;

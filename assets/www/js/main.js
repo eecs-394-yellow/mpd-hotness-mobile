@@ -37,6 +37,14 @@ WUR.compareDistance = function(a, b) {
 
 
 /**
+ * Used to sort hotspots by rating, descending
+ */
+WUR.compareRating = function(a, b) {
+  return b.rating - a.rating;
+}
+
+
+/**
  * Submits the rating form via AJAX
  * 
  * Returns a jqXHR object
@@ -168,14 +176,21 @@ WUR.refreshHotspotList = function() {
         .done(function(placesResult, ratingsResult) {
 
           var places = placesResult[0],
-          ratings = ratingsResult[0];
+            ratings = ratingsResult[0];
 
           // Add distance and rating to each Google-Places result
-          var numPlaces = places.length;
-          numRatings = ratings.length;
-          for (var i=0; i < numPlaces; i++) {
-            var place = places[i],
-            rating = null;
+          for (var i=0; i < places.length; i++) {
+            var place = places[i];
+            place.distance = google.maps.geometry.spherical
+              .computeDistanceBetween(place.geometry.location, WUR.currentLatLng);
+            if (place.distance > WUR.searchRadius){
+              places.splice(i, 1);
+              i--;
+              continue;
+            }
+
+            var rating = null,
+              numRatings = ratings.length;
             for (var j=0; j < numRatings; j++) {
               if (place.id == ratings[j].place_id) {
                 rating = ratings[j].rating;
@@ -183,25 +198,39 @@ WUR.refreshHotspotList = function() {
               }
             }
             place.rating = rating;
-            place.distance = google.maps.geometry.spherical
-            .computeDistanceBetween(place.geometry.location, WUR.currentLatLng);
+
+            place.index = i;
           }
 
-          // Sort results by distance
-          places.sort(WUR.compareDistance);
+          // Cache the combined results
+          WUR.places = places;
 
-          // Remove results outside of radius
-          for (i = places.length-1; i >= 0; i--) {
-            if (places[i].distance > WUR.searchRadius){
-              places.splice(i,1);
-            }
-          }
-
-          $('#hotspots-list')
-            .jqotesub(WUR.templates.listItem, places)
-            .listview('refresh');
+          WUR.renderSortedHotspots('distance');
         });
     });
+}
+
+
+/**
+ * Sorts the hotspots cached in WUR.places
+ * and renders them on the hotspots-list page
+ */
+WUR.renderSortedHotspots = function(sortBy) {
+  // We clone WUR.places instead of sorting it directly.
+  // This is necessary to maintain the mapping
+  // between each place's "index" property and its index
+  // in the WUR.places array.
+  var sortedPlaces = WUR.places.slice(0);
+  if (sortBy === 'distance') {
+    sortedPlaces.sort(WUR.compareDistance);
+  }
+  else {
+    sortedPlaces.sort(WUR.compareRating);
+  }
+
+  $('#hotspots-list')
+    .jqotesub(WUR.templates.listItem, sortedPlaces)
+    .listview('refresh');
 }
 
 

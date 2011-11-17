@@ -70,16 +70,21 @@
 	</div>
 
 	<div data-role="content">
-	<div class="list-heading">
-	   <span class="location">Location</span>
-	   <span class="distance">Distance</span>
-	   <span class="rating">Rating</span>
-	</div>
-    <ul id="hotspots-list" data-role="listview"></ul>
-	
+    <h2>Hotspots Near You</h2>
+    <div class="list-heading">
+      <div class="sort-buttons" data-role="fieldcontain">
+        <fieldset data-role="controlgroup" data-type="horizontal" >
+          <legend>Sort by:</legend>
+          <label for="sort-distance">Distance</label>
+          <input type="radio" name="sort-order" id="sort-distance" value="distance" />
+          <label for="sort-rating">Rating</label>
+          <input type="radio" name="sort-order" id="sort-rating" value="rating" />
+        </fieldset>
+      </div>
     </div>
-	
+    <ul id="hotspots-list" data-role="listview" data-inset="true"></ul>
 	</div>
+
 	<div data-role="footer" style="width: 100%">
 		<div data-role="navbar" style="width: 100%">
 			<ul style="width: 100%">
@@ -171,16 +176,16 @@
 
 <script type="text/x-jqote-template" id="hotspot-list-item">
   <![CDATA[
-    <li class="hotspot ui-li-static ui-body-c">
-	<a href="#map?p=<%= j %>">
-      <%= this.name %>
-	  </a>
-      <span class="distance ui-li-count">
-        <%= (this.distance * 0.000621371192).toFixed(1) %> mi
-      </span>
-      <span class="rating ui-li-count">
-        <% out += (this.rating === null) ? 'None' : parseFloat(this.rating).toFixed(1); %>
-      </span>      
+    <li class="hotspot">
+      <a href="#detail?p=<%= this.index %>">
+        <%= this.name %>
+        <span class="distance ui-li-count">
+          <%= (this.distance * 0.000621371192).toFixed(1) %> mi
+        </span>
+        <span class="rating ui-li-count">
+          <%= (this.rating === null) ? 'None' : parseFloat(this.rating).toFixed(1) %>
+        </span>
+      </a>
     </li>
   ]]>
 </script>
