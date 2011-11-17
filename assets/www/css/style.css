@@ -83,6 +83,32 @@
   right: 100px;
 }
 
+/* Homepage */
+
+.mainbanner {
+	font: italic 20px sans-serif;
+	text-align: center;
+	margin: 0;
+	padding: 0;
+}
+
+.helpertext {
+	font: italic 14px sans-serif;
+	/*color: #ffffff;  better or easier to read? */
+}
+
+#rating-page-button {
+	float: left;
+	margin-left: 50px;
+	min-width: 150px;
+}
+
+#list-page-button {
+	float: right;
+	margin-right: 50px;
+	min-width: 150px;
+}
+
 /* Hotness Scale */
 
 #hotness-scale{

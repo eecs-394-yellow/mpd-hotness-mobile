@@ -7,6 +7,7 @@
 	<title>Where U R</title> 
 
 	<link rel="stylesheet" href="css/jquery.mobile-1.0rc2.min.css" />
+	<link rel="stylesheet" href="css/themes/whereur-111711.css" />
 	<link rel="stylesheet" href="css/style.css" />
 
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=geometry,places&amp;sensor=true"></script>
@@ -19,15 +20,12 @@
 
 
 <div data-role="page" id="home" data-fullscreen="true">
-
-  <div data-role="header">
-    <h1>"Find the hottest places to be"</h1>
-  </div>
  
   <div data-role="content">
     <img src="img/logo.jpg" class="logo" alt="" />
-    <p><a href="#rating" data-role="button">Build A Fire</a></p>
-    <p><a href="#hotspots" data-role="button">Feel The Burn</a></p>
+	<p class="mainbanner">Find the hottest places to be</p>
+    <p id="rating-page-button"><a href="#rating" data-role="button" data-theme="a">Build A Fire</br><span class="helpertext">Rate your current place!</span></a></p>
+    <p id="list-page-button"><a href="#hotspots" data-role="button" data-theme="b">Feel The Burn</br><span class="helpertext">See which places are hot!</span></a></p>
   </div>
 
 </div>
@@ -38,12 +36,12 @@
 
 <div data-role="page" id="rating" data-fullscreen="true">
 
-	<div data-role="header">
+	<div data-role="header" data-theme="c">
     <a href="#home" data-icon="arrow-l" data-rel="back">Back</a>
 		<h1>Start A Fire</h1>
 	</div>
 
-	<div data-role="content">
+	<div data-role="content" data-theme="f">
     <form action="index.php" method="post" class="rating-form ui-body ui-body-a ui-corner-all">
       <fieldset class="center">
         <label for="places-menu" class="select">Choose Your Location:</label>
@@ -64,12 +62,12 @@
 
 <div data-role="page" id="hotspots" data-fullscreen="true">
 
-	<div data-role="header">
+	<div data-role="header" data-theme="d">
     <a href="#home" data-icon="arrow-l" data-rel="back">Back</a>
 		<h1>Feel The Burn</h1>
 	</div>
 
-	<div data-role="content">
+	<div data-role="content" data-theme="d">
     <h2>Hotspots Near You</h2>
     <div class="list-heading">
       <div class="sort-buttons" data-role="fieldcontain">
@@ -88,9 +86,9 @@
 	<div data-role="footer" style="width: 100%">
 		<div data-role="navbar" style="width: 100%">
 			<ul style="width: 100%">
-				<li id="refresh-list-button"><a>Refresh</a></li>
-				<li><a href="#map">Map</a></li>
-				<li><a href="#option" data-rel="dialog">Radius</a></li>
+				<li id="refresh-list-button" data-theme="e"><a>Refresh</a></li>
+				<li><a href="#map" data-theme="f">Map</a></li>
+				<li><a href="#option" data-rel="dialog" data-theme="d">Options</a></li>
 			</ul>
 		</div><!-- /navbar -->
 	</div>
@@ -102,7 +100,7 @@
 
 <div data-role="page" id="option" data-fullscreen="true">
 
-  <div data-role="header">
+  <div data-role="header" data-theme="e">
     <h1>Search Options</h1>
   </div>
  
@@ -111,7 +109,7 @@
 		<fieldset class="center">
 			<label for="radius">Select Search Radius</label>
 			<input type="range" name="radius" id="radius" value="5" min="1" max="5"  />
-			<a href="#hotspots" data-rel="back" data-role="button" id="refresh-list-with-option-button" data-theme="b">Search</a>
+			<a href="#hotspots" data-rel="back" data-role="button" id="refresh-list-with-option-button">Search</a>
 		</fieldset>
 		</form>
   </div>
@@ -124,7 +122,7 @@
 
 <div data-role="page" id="map" data-fullscreen="true">
 
-  <div data-role="header">
+  <div data-role="header" data-theme="e">
     <a href="#" data-icon="arrow-l" data-rel="back">Back</a>
     <h1>Map</h1>
   </div>
@@ -136,9 +134,9 @@
   	<div data-role="footer" style="width: 100%">
 		<div data-role="navbar" style="width: 100%">
 			<ul style="width: 100%">
-				<li id="refresh-list-button"><a>Refresh</a></li>
-				<li><a href="#hotspots">List</a></li>
-				<li><a href="#option" data-rel="dialog">Radius</a></li>
+				<li id="refresh-list-button" data-theme="e"><a>Refresh</a></li>
+				<li><a href="#hotspots" data-theme="f">List</a></li>
+				<li><a href="#option" data-rel="dialog" data-theme="d">Options</a></li>
 			</ul>
 		</div><!-- /navbar -->
 	</div>
@@ -150,20 +148,20 @@
 
 <div data-role="page" id="detail" data-fullscreen="true">
 
-  <div data-role="header">
+  <div data-role="header" data-theme="g">
     <a href="#hotspots-list-page" data-icon="arrow-l" data-rel="back">Back</a>
     <h1>Destination Details</h1>
   </div>
 
-  <div data-role="content">
+  <div data-role="content" data-theme="g">
   </div>
 
   <div data-role="footer" style="width: 100%">
     <div data-role="navbar" style="width: 100%">
       <ul style="width: 100%">
-        <li id="refresh-list-button"><a>Refresh</a></li>
-        <li><a href="#hotspots">List</a></li>
-        <li><a href="#option" data-rel="dialog">Radius</a></li>
+        <li id="refresh-list-button" data-theme="e"><a>Refresh</a></li>
+        <li><a href="#hotspots" data-theme="f">List</a></li>
+        <li><a href="#option" data-rel="dialog" data-theme="d">Options</a></li>
       </ul>
     </div><!-- /navbar -->
   </div>
