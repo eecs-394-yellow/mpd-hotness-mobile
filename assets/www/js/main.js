@@ -43,7 +43,7 @@ WUR.compareDistance = function(a, b) {
  */
 WUR.submitRating = function() {
   var placeName = $('#places-menu').val(),
-    rating = $('#rating').val();
+    rating = $('#rating-slider').val();
 
   return $.ajax({
     dataType: 'jsonp',
@@ -144,7 +144,7 @@ WUR.refreshPlacesMenu = function() {
   WUR.updateGeolocation()
     .done(function() {
       WUR.getPlaces(WUR.nearbyRadius)
-        .done(function(places) {
+        .done(function(places, status) {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
             $placesMenu
               .jqotesub(WUR.templates.menuOption, places)
