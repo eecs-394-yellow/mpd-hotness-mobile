@@ -29,7 +29,7 @@ window.WUR = {
 };
 
 /**
- * Used to sort Google-Places search results by distance, ascending
+ * Used to sort hotspots by distance, ascending
  */
 WUR.compareDistance = function(a, b) {
   return a.distance - b.distance;
@@ -234,6 +234,10 @@ WUR.renderSortedHotspots = function(sortBy) {
 }
 
 
+/**
+ * Initializes a Google Map displaying the given destinations
+ * and the user's current location
+ */
 WUR.loadMapPage = function(places) {
   if (WUR.map == null) {
     // Initialize map
@@ -348,6 +352,9 @@ WUR.clearRatings = function() {
 }
 
 
+/**
+ * Resizes the map on the map page to fill the viewport
+ */
 WUR.resizeMap = function() {
   if (WUR.map !== null) {
     var viewportHeight = $.mobile.pageContainer.height(),
@@ -362,6 +369,7 @@ WUR.resizeMap = function() {
 
 
 $(document)
+
   // Disable jQuery Mobile page transitions
   .bind('mobileinit', function(){
     $.mobile.defaultPageTransition = 'none';
@@ -369,9 +377,14 @@ $(document)
 
   .ready(function() {
 
+  // Load jQote2 templates
   WUR.templates.listItem = $.jqotec('#hotspot-list-item');
   WUR.templates.menuOption = $.jqotec('#places-menu-option');
   WUR.templates.detailPage = $.jqotec('#detail-page-content');
+
+  /**
+   * RATING PAGE
+   */
 
   $('#rating')
     .bind('pagebeforeshow', function() {
@@ -391,6 +404,14 @@ $(document)
     return false; // Prevent default form behavior
   });
 
+  /**
+   * HOTSPOT-LIST PAGE
+   */
+
+  $('#sort-distance, #sort-rating').change(function() {
+    WUR.renderSortedHotspots( $(this).val() );
+  });
+
   $('#refresh-list-button').click(function() {
     WUR.refreshHotspotList();
   });
@@ -401,25 +422,17 @@ $(document)
 
   $('#refresh-list-with-option-button').click(function() {
     var radius = $('#radius').val();
-  WUR.searchRadius = (radius * 1609.344);
+    WUR.searchRadius = (radius * 1609.344);
     WUR.refreshHotspotList();
   });
-
-  $('#rating')
-    .bind('pagebeforeshow', function() {
-      // Refresh the rating page every time it is shown
-      WUR.refreshPlacesMenu();
-    })
-    .bind('pageinit', function() {
-      $('#rating').bind('change', function() {
-        var hotness = $(this).val();
-        $('#hotness-scale').text( WUR.hotnessScale[hotness-1] );
-      });
-    });
 
   $('#hotspots').one('pagebeforeshow', function() {
     WUR.refreshHotspotList();
   });
+
+  /**
+   * MAP PAGE
+   */
 
   $('#map').bind('pageshow', function() {
     WUR.resizeMap();
@@ -428,6 +441,10 @@ $(document)
   $(window).bind('throttledresize', function() {
     WUR.resizeMap();
   });
+
+  /**
+   * DYNAMIC PAGE LOADING
+   */
 
   $(document).bind('pagebeforechange', function(event, data) {
     if (typeof data.toPage === 'string') {
