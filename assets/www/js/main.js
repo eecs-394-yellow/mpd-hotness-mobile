@@ -101,9 +101,6 @@ WUR.getPlaces = function(radius) {
     radius: radius,
     types: WUR.destinationTypes
   })
-    .done(function(results, status) {
-      WUR.places = results;
-    })
     .fail(function(results, status) {
       if (status != google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
         console.log('Error: Failed to search Google Places');
@@ -295,6 +292,22 @@ WUR.loadMapPage = function(places) {
 }
 
 
+/**
+ * Updates the detail page with data for the given hotspot
+ */
+WUR.loadDetailPage = function(place) {
+  var $page = $('#detail'),
+    $content = $page.find('.ui-content');
+  if ($content.length === 0) {
+    $content = $page.find(":jqmData(role='content')");
+  }
+
+  $content
+    .jqotesub(WUR.templates.detailPage, place)
+    .trigger('create');
+}
+
+
 WUR.clearRatings = function() {
   $.ajax({
     dataType: 'jsonp',
@@ -329,6 +342,7 @@ $(document)
 
   WUR.templates.listItem = $.jqotec('#hotspot-list-item');
   WUR.templates.menuOption = $.jqotec('#places-menu-option');
+  WUR.templates.detailPage = $.jqotec('#detail-page-content');
 
   $('#rating')
     .bind('pagebeforeshow', function() {
@@ -388,45 +402,58 @@ $(document)
 
   $(document).bind('pagebeforechange', function(event, data) {
     if (typeof data.toPage === 'string') {
-      var match = /map(\?p=([0-9]+))?$/.exec(data.toPage);
+      var match = /(map|detail)(\?p=([0-9]+))?$/.exec(data.toPage);
       if (match !== null) {
-        WUR.updateGeolocation()
-          .done(function() {
-            WUR.getPlaces(WUR.searchRadius)
-              .done(function() {
-                if (match[2] === undefined) {
-                  WUR.loadMapPage(WUR.places);
-                }
-                else {
-                  var i = parseInt(match[2]);
-                  WUR.loadMapPage(WUR.places.slice(i, i+1));
-                }
-                // Change to the map page
-                $.mobile.changePage($('#map'), {
-                  dataUrl: data.toPage
-                });
-              });
-          });
+        var destinationPage;
+
+        // The dynamic map and detail pages are dependent on data
+        // that is loaded only when the hotspot-list page is visited.
+        // If we have not yet visited the hotspot-list page,
+        // we redirect to the home page.
+        if (WUR.places.length === 0) {
+          destinationPage = 'home';
+        }
+        else {
+          destinationPage = match[1];
+
+          switch ( destinationPage ) {
+            case 'map':
+              if (match[3] === undefined) {
+                // Load map of all hotspots
+                WUR.loadMapPage(WUR.places);
+              }
+              else {
+                // Load map of individual hotspot
+                var i = parseInt(match[3]);
+                WUR.loadMapPage(WUR.places.slice(i, i+1));
+              }
+              break;
+
+            case 'detail':
+              if (match[3] !== undefined) {
+                WUR.loadDetailPage(WUR.places[ match[3] ]);
+              }
+              else {
+                destinationPage = 'home';
+              }
+              break;
+
+            default:
+              // Invalid URL hash
+              destinationPage = 'home';
+              break;
+          }
+        }
+
+        $.mobile.changePage($('#' + destinationPage), {
+          dataUrl: data.toPage
+        });
 
         // Cancel the default jQuery Mobile page-loading operations
         event.preventDefault();
       }
-//      else if (match = ) {
-//        WUR.updateGeolocation()
-//          .done(function() {
-//            WUR.getPlaces(WUR.searchRadius)
-//              .done(function() {
-//                // Create the page
-//                $.mobile.pageContainer.jqoteapp(template, WUR.places[urlParam]);
-//                // Change to the new detail page
-//                $.mobile.changePage($('#detail' + param));
-//                // Cancel the default jQuery Mobile page-loading operatoins
-//                event.preventDefault();
-//              });
-//          });
-//      }
-      }
-    })
+    }
   });
+});
 
 })(window, jQuery);
