@@ -288,7 +288,7 @@ WUR.loadMapPage = function(places) {
   bounds.extend(WUR.currentLatLng); 
 
   // Position the map so that all places are visible
-  WUR.map.fitBounds(bounds);
+  setTimeout( function() { WUR.map.fitBounds( bounds ); }, 1 );
 }
 
 
