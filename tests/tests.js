@@ -25,7 +25,7 @@ describe('WhereUR App', function() {
 	});
 	
 	it('should load the HTML from a fixture path', function() {
-		expect($('#home-page')).toExist();
+		expect($('#home')).toExist();
 	});
 	it('can access the WUR global object', function() {
 		expect(WUR).not.toBeNull();
