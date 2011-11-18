@@ -6,6 +6,8 @@
 
     <uses-sdk android:minSdkVersion="8" />
     
+	<icon src="img/icon.png" />
+	
     <supports-screens
         android:largeScreens="true"
         android:normalScreens="true"

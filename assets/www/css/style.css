@@ -1,4 +1,3 @@
-
 .ui-page {
   background: #eff0e0;
 }
@@ -16,12 +15,7 @@
   width: 80%;
 }
 
-.logo {
-	margin: auto; 
-	display: block;
-	padding-top: 80px;
-	padding-bottom: 80px;
-}
+
 
 .set {
 	text-align: center; 
@@ -69,21 +63,15 @@
   width: auto;
 }
 
-.hotspot.ui-li-has-count .ui-btn-inner a.ui-link-inherit {
-  padding-right: 150px;
-}
-
-.hotspot .distance,
-.hotspot .rating {
-  text-align: center;
-  width: 40px;
-}
-
-.hotspot .distance {
-  right: 100px;
-}
-
 /* Homepage */
+
+.logo {
+	margin: auto; 
+	display: block;
+	padding-top: 50px;
+	padding-bottom: 50px;
+	width: 150px;
+}
 
 .mainbanner {
 	font: italic 20px sans-serif;
@@ -99,15 +87,16 @@
 
 #rating-page-button {
 	float: left;
-	margin-left: 50px;
-	min-width: 150px;
 }
 
 #list-page-button {
 	float: right;
-	margin-right: 50px;
-	min-width: 150px;
 }
+
+.ui-btn-inner {  /* make multi-line buttons */
+	white-space: normal !important; 
+}
+
 
 /* Hotness Scale */
 
@@ -136,6 +125,24 @@
 .hotness-5{
 	background: url('../img/pepper-sprite-small.png') no-repeat 0 -160px;
 }
+
+
+/* List page */
+
+.hotspot.ui-li-has-count .ui-btn-inner a.ui-link-inherit {
+  padding-right: 150px;
+}
+
+.hotspot .distance,
+.hotspot .rating {
+  text-align: center;
+  width: 40px;
+}
+
+.hotspot .distance {
+  right: 100px;
+}
+
 	
 /* Map Page */
 
