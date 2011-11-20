@@ -152,3 +152,8 @@
 	padding: 0px;
 	margin: 0px;
 }
+
+/* Quick Fix */
+.header-fix{
+	margin-top:  43px;
+}
