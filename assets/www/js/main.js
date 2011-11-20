@@ -428,7 +428,7 @@ $(document)
     WUR.refreshHotspotList();
   });
 
-  $('#hotspots').one('pagebeforeshow', function() {
+  $('#hotspots').bind('pagebeforeshow', function() {
     WUR.refreshHotspotList();
   });
 
