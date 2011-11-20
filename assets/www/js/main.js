@@ -189,15 +189,17 @@ WUR.refreshHotspotList = function() {
               continue;
             }
 
-            var rating = null,
-              numRatings = ratings.length;
+            place.rating = null;
+            place.rating_count = 0;
+
+            var numRatings = ratings.length;
             for (var j=0; j < numRatings; j++) {
               if (place.id == ratings[j].place_id) {
-                rating = ratings[j].rating;
+                place.rating = ratings[j].rating;
+                place.rating_count = ratings[j].rating_count;
                 break;
               }
             }
-            place.rating = rating;
 
             place.index = i;
           }
