@@ -7,9 +7,6 @@
   margin-right: 0;
 }
 
-.rate.ui-slider-input {
-  display:none;
-}
 
 .rating-form input.ui-slider {
   width: 80%;

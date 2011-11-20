@@ -23,7 +23,7 @@
  
   <div data-role="content" data-theme="a">
     <img src="img/logo.png" class="logo" alt="" />
-	<p class="mainbanner">Find the hottest places to be!</p>
+	<p class="mainbanner">Find the hottest places to be in real time!</p>
     <p id="rating-page-button"><a href="#rating" data-role="button" data-theme="a">Build A Fire</a></br><span class="helpertext">Rate your current place</span></p>
     <p id="list-page-button"><a href="#hotspots" data-role="button" data-theme="b">Feel The Burn</a></br><span class="helpertext">See which places are hot</span></p>
   </div>
@@ -68,7 +68,7 @@
 	</div>
 
 	<div data-role="content" data-theme="e">
-    <h2>Hotspots Near You</h2>
+    <h2>What's Hot Near You</h2>
     <div class="list-heading">
       <div class="sort-buttons" data-role="fieldcontain">
         <fieldset data-role="controlgroup" data-type="horizontal" >
@@ -107,7 +107,7 @@
   <div data-role="content" class="ui-body-a">
 		<form class="ui-body">
 		<fieldset class="center">
-			<label for="radius">Select Search Radius</label>
+			<label for="radius">Select Search Radius (In Miles)</label>
 			<input type="range" name="radius" id="radius" value="5" min="1" max="5"  />
 			<a href="#hotspots" data-rel="back" data-role="button" id="refresh-list-with-option-button">Search</a>
 		</fieldset>
@@ -201,14 +201,14 @@
     <h2 class="name"><%= this.name %></h2>
     <p class="rating">
       <span class="label">Rating:</span>
-      <span class="value"><%= this.name %></span>
+      <span class="value"><%= (this.rating == null) ? '0' : parseFloat(this.rating).toFixed(1) %></span>
     </p>
     <p class="distance">
       <span class="label">Distance:</span>
       <span class="value"><%= (this.distance * 0.000621371192).toFixed(1) %> mi</span>
     </p>
     <p class="votes">
-      <span class="label">Votes:</span>
+      <span class="label">Number of reviews within the last hour:</span>
       <span class="value"><%= (this.rating_count === undefined) ? 'None' : this.rating_count %></span>
     </p>
     <p style="padding-top: 30px;">
