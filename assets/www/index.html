@@ -19,7 +19,7 @@
 <!-- Homepage -->
 
 
-<div data-role="page" id="home" data-fullscreen="true">
+<div data-role="page" id="home">
  
   <div data-role="content" data-theme="a">
     <img src="img/logo.png" class="logo" alt="" />
@@ -40,7 +40,7 @@
 <!-- Submit Heat Form -->
 
 
-<div data-role="page" id="rating" data-fullscreen="true">
+<div data-role="page" id="rating">
 
 	<div data-role="header" data-theme="c">
     <a href="#home" data-icon="arrow-l">Back</a>
@@ -66,7 +66,7 @@
 <!-- Hotspot List -->
 
 
-<div data-role="page" id="hotspots" data-fullscreen="true">
+<div data-role="page" id="hotspots">
 
 	<div data-role="header" data-theme="e">
     <a href="#home" data-icon="arrow-l" data-rel="back">Back</a>
@@ -89,14 +89,14 @@
     <ul id="hotspots-list" data-role="listview" data-inset="true" data-theme="d"></ul>
 	</div>
 
-	<div data-role="footer" style="width: 100%">
-		<div data-role="navbar" style="width: 100%">
-			<ul style="width: 100%">
+	<div data-role="footer" data-position="fixed" class="nav-icons">
+		<div data-role="navbar">
+			<ul>
 				<li id="refresh-list-button" data-theme="e"><a>Refresh</a></li>
 				<li><a href="#map" data-theme="f">Map</a></li>
 				<li><a href="#option" data-rel="dialog" data-theme="d">Options</a></li>
 			</ul>
-		</div><!-- /navbar -->
+		</div>
 	</div>
 </div>
 
@@ -104,7 +104,7 @@
 <!-- List Option Dialog Page -->
 
 
-<div data-role="page" id="option" data-fullscreen="true">
+<div data-role="page" id="option">
 
   <div data-role="header" data-theme="e">
     <h1>Search Options</h1>
@@ -126,7 +126,7 @@
 <!-- Maps Page -->
 
 
-<div data-role="page" id="map" data-fullscreen="true">
+<div data-role="page" id="map">
 
   <div data-role="header" data-theme="e">
     <a href="#" data-icon="arrow-l" data-rel="back">Back</a>
@@ -134,17 +134,17 @@
   </div>
  
   <div data-role="content">
-    <div id="map-canvas" style="width: 100%;"></div>
+    <div id="map-canvas"></div>
   </div>
   
-  	<div data-role="footer" style="width: 100%">
-		<div data-role="navbar" style="width: 100%">
-			<ul style="width: 100%">
+	<div data-role="footer" data-position="fixed" class="nav-icons">
+		<div data-role="navbar">
+			<ul>
 				<li id="refresh-list-button" data-theme="e"><a>Refresh</a></li>
 				<li><a href="#hotspots" data-theme="f">List</a></li>
 				<li><a href="#option" data-rel="dialog" data-theme="d">Options</a></li>
 			</ul>
-		</div><!-- /navbar -->
+		</div>
 	</div>
 
 </div>
@@ -152,7 +152,7 @@
 <!-- Details Page -->
 
 
-<div data-role="page" id="detail" data-fullscreen="true">
+<div data-role="page" id="detail">
 
   <div data-role="header" data-theme="g">
     <a href="#hotspots-list-page" data-icon="arrow-l" data-rel="back">Back</a>
@@ -162,14 +162,14 @@
   <div data-role="content" data-theme="f">
   </div>
 
-  <div data-role="footer" style="width: 100%">
-    <div data-role="navbar" style="width: 100%">
-      <ul style="width: 100%">
+  <div data-role="footer" data-position="fixed" class="nav-icons">
+    <div data-role="navbar">
+      <ul>
         <li id="refresh-list-button" data-theme="e"><a>Refresh</a></li>
         <li><a href="#hotspots" data-theme="f">List</a></li>
         <li><a href="#option" data-rel="dialog" data-theme="d">Options</a></li>
       </ul>
-    </div><!-- /navbar -->
+    </div>
   </div>
 
 </div>
