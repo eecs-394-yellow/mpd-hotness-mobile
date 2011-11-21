@@ -78,8 +78,15 @@
 }
 
 .helpertext {
+	display: inline-block;
 	font: italic 14px sans-serif;
+	margin-top: 1em;
 	/*color: #ffffff;  better or easier to read? */
+}
+
+.main-button {
+	text-align: center;
+	width: 50%;
 }
 
 #rating-page-button {
