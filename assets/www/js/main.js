@@ -308,7 +308,7 @@ WUR.loadMapPage = function(places) {
     WUR.markers.push(marker);
     bounds.extend(placeLatLng);
     google.maps.event.addListener(marker, 'click', function() {
-      WUR.infoWindow.setContent(this.place.name);
+      WUR.infoWindow.setContent(this.place.name + ' : ' + ((this.place.rating == null) ? '0' : parseFloat(this.place.rating).toFixed(1)) + '/5.0 Rating');
       WUR.infoWindow.open(WUR.map, this);
     });
   }
