@@ -3,6 +3,7 @@ package com.phonegap.mpdhotness;
 import android.app.Activity;
 import android.os.Bundle;
 import com.phonegap.*;
+import edu.northwestern.whereur.R;
 
 public class WhereUR extends DroidGap
 {
