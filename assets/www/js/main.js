@@ -20,7 +20,7 @@ window.WUR = {
   currentLatLng: null, // Google Maps LatLng object
   templates: {},
   searchRadius: 5000, // meters
-  nearbyRadius: 500, // meters
+  nearbyRadius: 1000, // meters
   destinationTypes: ['bar'], // Types of Google Places (see http://goo.gl/ChNhe)
   places: [],
   markers: [],
