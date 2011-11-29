@@ -347,9 +347,11 @@ WUR.loadDetailPage = function(place) {
     .jqotesub(WUR.templates.detailPage, place)
     .trigger('create');
 
-  $('#refresh-details-button').click(function() {
-	WUR.refreshDetails(place); 
-  });
+  $('#refresh-details-button')
+    .unbind('.WUR')
+    .bind('click.WUR', function() {
+      WUR.refreshDetails(place);
+    });
 }
 
 WUR.clearRatings = function() {
