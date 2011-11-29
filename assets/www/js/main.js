@@ -25,7 +25,8 @@ window.WUR = {
   markers: [],
   server: "http://mpd-hotness.nfshost.com",
   map: null,
-  $map: null
+  $map: null,
+  mappedPlaces: null // The number of places currently displayed on the map
 };
 
 /**
@@ -179,7 +180,7 @@ WUR.refreshPlacesMenu = function() {
 /**
  * Refreshes the list of hotspots on the hotspots page
  */
-WUR.refreshHotspotList = function() {
+WUR.refreshHotspotList = function(refreshMapPage) {
   WUR.updateGeolocation()
     .done(function() {
 
@@ -200,7 +201,7 @@ WUR.refreshHotspotList = function() {
               i--;
               continue;
             }
-            
+ 
             var rating = ratings[place.id];
             if(rating != null) {
                 place.rating = rating.rating;
@@ -217,6 +218,10 @@ WUR.refreshHotspotList = function() {
           // Cache the combined results
           WUR.places = places;
           WUR.renderSortedHotspots('distance');
+
+          if (refreshMapPage === true) {
+            WUR.loadMapPage(places);
+          }
         });
     });
 }
@@ -248,6 +253,7 @@ WUR.renderSortedHotspots = function(sortBy) {
  * and the user's current location
  */
 WUR.loadMapPage = function(places) {
+  WUR.mappedPlaces = places;
   if (WUR.map == null) {
     // Initialize map
     var mapOptions = {
@@ -330,7 +336,7 @@ WUR.loadMapPage = function(places) {
   bounds.extend(WUR.currentLatLng); 
 
   // Position the map so that all places are visible
-  setTimeout( function() { WUR.map.fitBounds( bounds ); }, 1 );
+  setTimeout( function() {WUR.map.fitBounds( bounds );}, 1 );
 }
 
 /**
@@ -451,6 +457,21 @@ $(document)
 
   $(window).bind('throttledresize', function() {
     WUR.resizeMap();
+  });
+
+  $('#refresh-map-button').bind('click', function() {
+    if (WUR.mappedPlaces === null) {
+      return;
+    }
+    else if (WUR.mappedPlaces.length === 1) {
+      WUR.updateGeolocation()
+        .done(function() {
+          WUR.loadMapPage(WUR.mappedPlaces);
+        });
+    }
+    else {
+      WUR.refreshHotspotList(true);
+    }
   });
 
   /**
