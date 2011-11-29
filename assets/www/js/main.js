@@ -360,16 +360,6 @@ WUR.loadDetailPage = function(place) {
     });
 }
 
-WUR.clearRatings = function() {
-  $.ajax({
-    dataType: 'jsonp',
-    url: WUR.server + "/clear_ratings.php"
-  })
-    .done(function() {
-      WUR.refreshHotspotList();
-    });
-}
-
 /**
  * Resizes the map on the map page to fill the viewport
  */
@@ -431,10 +421,6 @@ $(document)
 
   $('#refresh-list-button').click(function() {
     WUR.refreshHotspotList();
-  });
-
-  $('#clear-ratings-button').click(function() {
-    WUR.clearRatings();
   });
 
   $('#refresh-list-with-option-button').click(function() {
