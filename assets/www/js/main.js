@@ -1,6 +1,5 @@
 (function (window, $) {
 
-
 /**
  * Global Application Object
  * 
@@ -24,6 +23,7 @@ window.WUR = {
   destinationTypes: ['bar'], // Types of Google Places (see http://goo.gl/ChNhe)
   places: [],
   markers: [],
+  server: "http://mpd-hotness.nfshost.com",
   map: null,
   $map: null
 };
@@ -35,14 +35,12 @@ WUR.compareDistance = function(a, b) {
   return a.distance - b.distance;
 }
 
-
 /**
  * Used to sort hotspots by rating, descending
  */
 WUR.compareRating = function(a, b) {
   return b.rating - a.rating;
 }
-
 
 /**
  * Submits the rating form via AJAX
@@ -55,7 +53,7 @@ WUR.submitRating = function() {
 
   return $.ajax({
     dataType: 'jsonp',
-    url: "http://mpd-hotness.nfshost.com/rate_place.php",
+    url: WUR.server + "/rate_place.php",
     data: {
       place_id: placeName,
       lat: WUR.currentCoordinates.latitude,
@@ -72,7 +70,6 @@ WUR.submitRating = function() {
     });
 }
 
-
 /**
  * Retrieves the current average rating
  * for each location in the database
@@ -83,18 +80,18 @@ WUR.submitRating = function() {
 WUR.getRatings = function() {
   return $.ajax({
     dataType: 'jsonp',
-    url: "http://mpd-hotness.nfshost.com/list_places.php",
+    url: WUR.server + "/list_places.php",
     data: {
       lat: WUR.currentCoordinates.latitude,
       lon: WUR.currentCoordinates.longitude,
-      max_age_minutes: WUR.maximumRatingAge
+      max_age_minutes: WUR.maximumRatingAge,
+      version: 2
     }
   })
     .fail(function() {
       console.log('Error: Failed to retrieve destination ratings');
     });
 }
-
 
 /**
  * Retrieves the list of nearby places
@@ -116,6 +113,23 @@ WUR.getPlaces = function(radius) {
     });
 }
 
+/** 
+ * Retrieves fresh rating details for a given place, updates the place object, 
+ * and calls WUR.loadDetailPage to display the new results.
+ */
+WUR.refreshDetails = function(place) {
+  $.ajax({
+    dataType: 'jsonp',
+    url: WUR.server + "/place_details.php",
+    data: {
+      place_id: place.id
+    }
+  }).done(function(detailResult) {
+      place.rating = detailResult.rating;
+      place.rating_count = detailResult.rating_count;
+      WUR.loadDetailPage(place);
+  })
+}
 
 /**
  * Updates the user's current geolocation
@@ -139,7 +153,6 @@ WUR.updateGeolocation = function() {
     });
 }
 
-
 /**
  * Refreshes the places menu on the rating page
  * based on the user's current geolocation
@@ -162,7 +175,6 @@ WUR.refreshPlacesMenu = function() {
         });
     });
 }
-
 
 /**
  * Refreshes the list of hotspots on the hotspots page
@@ -188,17 +200,15 @@ WUR.refreshHotspotList = function() {
               i--;
               continue;
             }
-
-            place.rating = null;
-            place.rating_count = 0;
-
-            var numRatings = ratings.length;
-            for (var j=0; j < numRatings; j++) {
-              if (place.id == ratings[j].place_id) {
-                place.rating = ratings[j].rating;
-                place.rating_count = ratings[j].rating_count;
-                break;
-              }
+            
+            var rating = ratings[place.id];
+            if(rating != null) {
+                place.rating = rating.rating;
+                place.rating_count = rating.rating_count;
+            }
+            else {
+                place.rating = null;
+                place.rating_count = 0;
             }
 
             place.index = i;
@@ -206,12 +216,10 @@ WUR.refreshHotspotList = function() {
 
           // Cache the combined results
           WUR.places = places;
-
           WUR.renderSortedHotspots('distance');
         });
     });
 }
-
 
 /**
  * Sorts the hotspots cached in WUR.places
@@ -234,7 +242,6 @@ WUR.renderSortedHotspots = function(sortBy) {
     .jqotesub(WUR.templates.listItem, sortedPlaces)
     .listview('refresh');
 }
-
 
 /**
  * Initializes a Google Map displaying the given destinations
@@ -326,7 +333,6 @@ WUR.loadMapPage = function(places) {
   setTimeout( function() { WUR.map.fitBounds( bounds ); }, 1 );
 }
 
-
 /**
  * Updates the detail page with data for the given hotspot
  */
@@ -340,19 +346,21 @@ WUR.loadDetailPage = function(place) {
   $content
     .jqotesub(WUR.templates.detailPage, place)
     .trigger('create');
-}
 
+  $('#refresh-details-button').click(function() {
+	WUR.refreshDetails(place); 
+  });
+}
 
 WUR.clearRatings = function() {
   $.ajax({
     dataType: 'jsonp',
-    url: "http://mpd-hotness.nfshost.com/clear_ratings.php"
+    url: WUR.server + "/clear_ratings.php"
   })
     .done(function() {
       WUR.refreshHotspotList();
     });
 }
-
 
 /**
  * Resizes the map on the map page to fill the viewport
@@ -368,7 +376,6 @@ WUR.resizeMap = function() {
     }
   }
 }
-
 
 $(document)
 
@@ -450,7 +457,7 @@ $(document)
 
   $(document).bind('pagebeforechange', function(event, data) {
     if (typeof data.toPage === 'string') {
-      var match = /(map|detail)(\?p=([0-9]+))?$/.exec(data.toPage);
+      var match = /(map|detail)(?:\?p=([0-9]+))?$/.exec(data.toPage);
       if (match !== null) {
         var destinationPage;
 
@@ -466,20 +473,20 @@ $(document)
 
           switch ( destinationPage ) {
             case 'map':
-              if (match[3] === undefined) {
+              if (match[2] === undefined) {
                 // Load map of all hotspots
                 WUR.loadMapPage(WUR.places);
               }
               else {
                 // Load map of individual hotspot
-                var i = parseInt(match[3]);
+                var i = parseInt(match[2]);
                 WUR.loadMapPage(WUR.places.slice(i, i+1));
               }
               break;
 
             case 'detail':
-              if (match[3] !== undefined) {
-                WUR.loadDetailPage(WUR.places[ match[3] ]);
+              if (match[2] !== undefined) {
+                WUR.loadDetailPage(WUR.places[match[2]]);
               }
               else {
                 destinationPage = 'home';
