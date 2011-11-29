@@ -203,3 +203,20 @@
 	height: 26px !important;
   margin-top: 2px;
 }
+
+/* Page Loading Message */
+
+div.ui-loader {
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #BEB6A3 /*{g-bar-background-start}*/), to( #8D8778 /*{g-bar-background-end}*/)); /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient(top, #BEB6A3 /*{g-bar-background-start}*/, #8D8778 /*{g-bar-background-end}*/); /* Chrome 10+, Saf5.1+ */
+  background-image:    -moz-linear-gradient(top, #BEB6A3 /*{g-bar-background-start}*/, #8D8778 /*{g-bar-background-end}*/); /* FF3.6 */
+  background-image:     -ms-linear-gradient(top, #BEB6A3 /*{g-bar-background-start}*/, #8D8778 /*{g-bar-background-end}*/); /* IE10 */
+  background-image:      -o-linear-gradient(top, #BEB6A3 /*{g-bar-background-start}*/, #8D8778 /*{g-bar-background-end}*/); /* Opera 11.10+ */
+  background-image:         linear-gradient(top, #BEB6A3 /*{g-bar-background-start}*/, #8D8778 /*{g-bar-background-end}*/);
+  border: 1px solid #FFF;
+  box-shadow: 0 0 2px #333;
+  -moz-box-shadow: 0 0 2px #333;
+  -webkit-box-shadow: 0 0 2px #333;
+  color: #FFF;
+  text-shadow: 0 1px 0 #333;
+}

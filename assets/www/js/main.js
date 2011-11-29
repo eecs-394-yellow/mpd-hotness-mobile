@@ -24,6 +24,7 @@ window.WUR = {
   places: [],
   markers: [],
   server: "http://mpd-hotness.nfshost.com",
+  loading: false, // Whether or not a page is being loaded
   map: null,
   $map: null,
   mappedPlaces: null // The number of places currently displayed on the map
@@ -158,40 +159,52 @@ WUR.updateGeolocation = function() {
     });
 }
 
+WUR.loadFailHandler = function() {
+  WUR.loading = false;
+  $.mobile.hidePageLoadingMsg();
+}
+
 /**
  * Refreshes the places menu on the rating page
  * based on the user's current geolocation
  */
 WUR.refreshPlacesMenu = function() {
+  WUR.loading = true;
   var $placesMenu = $('#places-menu').selectmenu('disable');
   WUR.updateGeolocation()
     .done(function() {
       WUR.getPlaces(WUR.nearbyRadius)
         .done(function(places, status) {
+          WUR.loading = false;
           if (status === google.maps.places.PlacesServiceStatus.OK) {
             $placesMenu
               .jqotesub(WUR.templates.menuOption, places)
               .selectmenu('refresh')
               .selectmenu('enable');
+            $.mobile.hidePageLoadingMsg();
           }
           else {
+            $.mobile.hidePageLoadingMsg();
             alert("Hey, you're not in a bar! You should get out more often!");
           }
-        });
-    });
+        })
+        .fail(WUR.loadFailHandler);
+    })
+    .fail(WUR.loadFailHandler);
 }
 
 /**
  * Refreshes the list of hotspots on the hotspots page
  */
 WUR.refreshHotspotList = function(refreshMapPage) {
+  WUR.loading = true;
   WUR.updateGeolocation()
     .done(function() {
 
       // Query Google Places and WhereUR database simultaneously
       $.when( WUR.getPlaces(WUR.searchRadius), WUR.getRatings() )
         .done(function(placesResult, ratingsResult) {
-
+          WUR.loading = false;
           var places = placesResult[0],
             ratings = ratingsResult[0];
 
@@ -223,11 +236,15 @@ WUR.refreshHotspotList = function(refreshMapPage) {
           WUR.places = places;
           WUR.renderSortedHotspots('distance');
 
+          $.mobile.hidePageLoadingMsg();
+
           if (refreshMapPage === true) {
             WUR.loadMapPage(places);
           }
-        });
-    });
+        })
+        .fail(WUR.loadFailHandler);
+    })
+    .fail(WUR.loadFailHandler);
 }
 
 /**
@@ -384,6 +401,7 @@ $(document)
   // Disable jQuery Mobile page transitions
   .bind('mobileinit', function(){
     $.mobile.defaultPageTransition = 'none';
+    $.mobile.defaultDialogTransition = 'none';
   })
 
   .ready(function() {
@@ -400,6 +418,11 @@ $(document)
   $('#rating')
     .bind('pagebeforeshow', function() {
       // Refresh the rating page every time it is shown
+      $(this).one('pageshow', function() {
+        if (WUR.loading) {
+          $.mobile.showPageLoadingMsg();
+        }
+      });
       WUR.refreshPlacesMenu();
     })
     .bind('pageinit', function() {
@@ -424,6 +447,7 @@ $(document)
   });
 
   $('#refresh-list-button').click(function() {
+    $.mobile.showPageLoadingMsg();
     WUR.refreshHotspotList();
   });
 
@@ -433,6 +457,11 @@ $(document)
   });
 
   $('#hotspots').bind('pagebeforeshow', function() {
+    $(this).one('pageshow', function() {
+      if (WUR.loading) {
+        $.mobile.showPageLoadingMsg();
+      }
+    });
     WUR.refreshHotspotList();
   });
 
@@ -453,12 +482,17 @@ $(document)
       return;
     }
     else if (WUR.mappedPlaces.length === 1) {
+      $.mobile.showPageLoadingMsg();
       WUR.updateGeolocation()
         .done(function() {
           WUR.loadMapPage(WUR.mappedPlaces);
+        })
+        .always(function() {
+          $.mobile.hidePageLoadingMsg();
         });
     }
     else {
+      $.mobile.showPageLoadingMsg();
       WUR.refreshHotspotList(true);
     }
   });
