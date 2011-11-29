@@ -440,7 +440,6 @@ $(document)
   $('#refresh-list-with-option-button').click(function() {
     var radius = $('#radius').val();
     WUR.searchRadius = (radius * 1609.344);
-    WUR.refreshHotspotList();
   });
 
   $('#hotspots').bind('pagebeforeshow', function() {
