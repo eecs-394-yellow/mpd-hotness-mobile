@@ -172,7 +172,6 @@
 }
 .nav-icons .ui-btn .ui-icon {
 	width: 30px !important;
-	height: 30px !important;
 	margin-left: -15px !important;
 	box-shadow: none !important;
 	-moz-box-shadow: none !important;
@@ -180,19 +179,27 @@
 	-webkit-border-radius: 0 !important;
 	border-radius: 0 !important;
 }
+.nav-icons [class*=ui-btn-hover] .ui-icon {
+  background-position: top center;
+  opacity: .8;
+}
 .refresh .ui-icon {
-	background: url(../img/refresh.png) 50% 50% no-repeat;
-	background-size: 24px 26px;
+	background: url(../img/refresh.png) bottom center no-repeat;
+	height: 26px !important;
+  margin-top: 2px;
 }
 .map .ui-icon {
-	background: url(../img/map.png) 50% 50% no-repeat;
-	background-size: 26px 21px;
+	background: url(../img/map.png) bottom center no-repeat;
+	height: 21px !important;
+  margin-top: 4px;
 }
 .list .ui-icon {
-	background: url(../img/notepad.png) 50% 50% no-repeat;
-	background-size: 22px 28px;
+	background: url(../img/notepad.png) bottom center no-repeat;
+	height: 28px !important;
+  margin-top: 1px;
 }
 .options .ui-icon {
-	background: url(../img/gear.png) 50% 50% no-repeat;
-	background-size: 26px 26px;
+	background: url(../img/gear.png) bottom center no-repeat;
+	height: 26px !important;
+  margin-top: 2px;
 }
