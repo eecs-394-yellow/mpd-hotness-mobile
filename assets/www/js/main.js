@@ -67,7 +67,7 @@ WUR.submitRating = function() {
       $.mobile.changePage($('#home'));
     })
     .fail(function() {
-      alert('Error: Failed to submit rating');
+      alert('An error occurred while submitting your rating. Try again later.');
     });
 }
 
@@ -90,7 +90,7 @@ WUR.getRatings = function() {
     }
   })
     .fail(function() {
-      console.log('Error: Failed to retrieve destination ratings');
+      alert('An error occurred while retrieving destination ratings. Try again later.');
     });
 }
 
@@ -109,7 +109,7 @@ WUR.getPlaces = function(radius) {
   })
     .fail(function(results, status) {
       if (status != google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
-        console.log('Error: Failed to search Google Places');
+        alert('An error occurred while retrieving destination information. Try again later.');
       }
     });
 }
@@ -125,11 +125,15 @@ WUR.refreshDetails = function(place) {
     data: {
       place_id: place.id
     }
-  }).done(function(detailResult) {
+  })
+    .done(function(detailResult) {
       place.rating = detailResult.rating;
       place.rating_count = detailResult.rating_count;
       WUR.loadDetailPage(place);
-  })
+    })
+    .fail(function() {
+      alert("An error occurred while retrieving your destination's details. Try again later.");
+    })
 }
 
 /**
@@ -150,7 +154,7 @@ WUR.updateGeolocation = function() {
       WUR.currentLatLng = new google.maps.LatLng(lat, lon);
     })
     .fail(function() {
-      console.log('Error: Failed to detect geolocation');
+      alert('An error occurred while trying to determine your location. Check your GPS settings and try again.');
     });
 }
 
