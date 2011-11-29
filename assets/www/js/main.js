@@ -15,6 +15,7 @@ window.WUR = {
   ],
   maximumRatingAge: 60, // minutes
   geolocationRefreshInterval: 10000, // milliseconds
+  timeout: 10000, // timeout delay (in milliseconds) for asynch. operations
   currentCoordinates: null, // HTML5 Coordinates object
   currentLatLng: null, // Google Maps LatLng object
   templates: {},
@@ -55,6 +56,7 @@ WUR.submitRating = function() {
 
   return $.ajax({
     dataType: 'jsonp',
+    timeout: WUR.timeout,
     url: WUR.server + "/rate_place.php",
     data: {
       place_id: placeName,
@@ -82,6 +84,7 @@ WUR.submitRating = function() {
 WUR.getRatings = function() {
   return $.ajax({
     dataType: 'jsonp',
+    timeout: WUR.timeout,
     url: WUR.server + "/list_places.php",
     data: {
       lat: WUR.currentCoordinates.latitude,
@@ -123,6 +126,7 @@ WUR.refreshDetails = function(place) {
   $.mobile.showPageLoadingMsg();
   $.ajax({
     dataType: 'jsonp',
+    timeout: WUR.timeout,
     url: WUR.server + "/place_details.php",
     data: {
       place_id: place.id
@@ -150,7 +154,8 @@ WUR.refreshDetails = function(place) {
 WUR.updateGeolocation = function() {
   return getCurrentPosition({
     enableHighAccuracy: true,
-    maximumAge: WUR.geolocationRefreshInterval
+    maximumAge: WUR.geolocationRefreshInterval,
+    timeout: WUR.timeout
   })
     .done(function(position) {
       var coords = WUR.currentCoordinates = position.coords,
