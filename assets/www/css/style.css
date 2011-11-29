@@ -63,10 +63,10 @@
 /* Homepage */
 
 .logo {
-	margin: auto; 
+	margin: auto;
 	display: block;
-	padding-top: 50px;
-	padding-bottom: 50px;
+	padding-top: 10%;
+	padding-bottom: 10%;
 	width: 150px;
 }
 
@@ -81,7 +81,6 @@
 	display: inline-block;
 	font: italic 14px sans-serif;
 	margin-top: 1em;
-	/*color: #ffffff;  better or easier to read? */
 }
 
 .main-button {
