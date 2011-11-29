@@ -179,7 +179,8 @@ WUR.loadFailHandler = function() {
  */
 WUR.refreshPlacesMenu = function() {
   WUR.loading = true;
-  var $placesMenu = $('#places-menu').selectmenu('disable');
+  var $placesMenu = $('#places-menu').selectmenu('disable')
+    $submitButton = $('#submit-hotspot-button').button('disable');
   WUR.updateGeolocation()
     .done(function() {
       WUR.getPlaces(WUR.nearbyRadius)
@@ -190,11 +191,13 @@ WUR.refreshPlacesMenu = function() {
               .jqotesub(WUR.templates.menuOption, places)
               .selectmenu('refresh')
               .selectmenu('enable');
+            $submitButton.button('enable');
             $.mobile.hidePageLoadingMsg();
           }
           else {
             $.mobile.hidePageLoadingMsg();
             alert("Hey, you're not in a bar! You should get out more often!");
+            $.mobile.changePage($('#home'));
           }
         })
         .fail(WUR.loadFailHandler);
