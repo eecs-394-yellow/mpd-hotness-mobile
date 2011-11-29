@@ -220,28 +220,36 @@ WUR.refreshHotspotList = function(refreshMapPage) {
           var places = placesResult[0],
             ratings = ratingsResult[0];
 
-          // Add distance and rating to each Google-Places result
-          for (var i=0; i < places.length; i++) {
-            var place = places[i];
-            place.distance = google.maps.geometry.spherical
-              .computeDistanceBetween(place.geometry.location, WUR.currentLatLng);
-            if (place.distance > WUR.searchRadius){
-              places.splice(i, 1);
-              i--;
-              continue;
-            }
- 
-            var rating = ratings[place.id];
-            if(rating != null) {
-                place.rating = rating.rating;
-                place.rating_count = rating.rating_count;
-            }
-            else {
-                place.rating = null;
-                place.rating_count = 0;
-            }
+          var $hotspotsPage = $('#hotspots');
+          if (places.length === 0) {
+            $hotspotsPage.addClass('no-results');
+          }
+          else {
+            $hotspotsPage.removeClass('no-results');
 
-            place.index = i;
+            // Add distance and rating to each Google-Places result
+            for (var i=0; i < places.length; i++) {
+              var place = places[i];
+              place.distance = google.maps.geometry.spherical
+                .computeDistanceBetween(place.geometry.location, WUR.currentLatLng);
+              if (place.distance > WUR.searchRadius){
+                places.splice(i, 1);
+                i--;
+                continue;
+              }
+
+              var rating = ratings[place.id];
+              if(rating != null) {
+                  place.rating = rating.rating;
+                  place.rating_count = rating.rating_count;
+              }
+              else {
+                  place.rating = null;
+                  place.rating_count = 0;
+              }
+
+              place.index = i;
+            }
           }
 
           // Cache the combined results

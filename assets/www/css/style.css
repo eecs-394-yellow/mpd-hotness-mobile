@@ -151,6 +151,25 @@
   right: 100px;
 }
 
+.no-bars-message {
+  display: none;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  margin: 50px auto;
+  padding: 1em;
+  text-align: center;
+  width: 50%;
+}
+
+.no-results .no-bars-message {
+  display: block;
+}
+
+.no-results #hotspots-list {
+  display: none;
+}
+
 	
 /* Map Page */
 
