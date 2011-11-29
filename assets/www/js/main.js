@@ -120,6 +120,7 @@ WUR.getPlaces = function(radius) {
  * and calls WUR.loadDetailPage to display the new results.
  */
 WUR.refreshDetails = function(place) {
+  $.mobile.showPageLoadingMsg();
   $.ajax({
     dataType: 'jsonp',
     url: WUR.server + "/place_details.php",
@@ -135,6 +136,9 @@ WUR.refreshDetails = function(place) {
     .fail(function() {
       alert("An error occurred while retrieving your destination's details. Try again later.");
     })
+    .always(function() {
+      $.mobile.hidePageLoadingMsg();
+    });
 }
 
 /**
