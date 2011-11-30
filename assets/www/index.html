@@ -210,7 +210,7 @@
     <h2 class="name"><%= this.name %></h2>
     <p class="rating">
       <span class="label">Rating:</span>
-      <span class="value"><%= (this.rating == null) ? '0' : parseFloat(this.rating).toFixed(1) %> out of 5.0</span>
+      <span class="value"><%= (this.rating == null) ? 'Not Rated' : parseFloat(this.rating).toFixed(1) + ' out of 5.0' %></span>
     </p>
     <p class="distance">
       <span class="label">Distance:</span>
